@@ -92,4 +92,4 @@ if __name__ == '__main__':
         populateDynamicTable(standData)
 
         # wait 5 minutes (300 secs), and run the above again.
-        time.sleep(300.0 - ((time.time() - starttime) % 300.0))
+        time.sleep(300.0 - ((time.time() - start_time) % 300.0))
