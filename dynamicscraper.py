@@ -5,7 +5,7 @@ import datetime
 import time
 import sqlalchemy
 from sqlalchemy import create_engine
-from sqlalchemy.dialects.mysql import mysqldb
+import pymysql
 
 def getJson():
     ''' Function to get JSON data from JCDecaux API '''
