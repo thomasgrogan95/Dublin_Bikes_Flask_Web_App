@@ -20,7 +20,7 @@ def connectDB():
 
     try:
         # http://docs.sqlalchemy.org/en/latest/core/engines.html
-        engine = create_engine("mysql+mysqldb://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData", echo=False)
+        engine = create_engine("mysql+pymysql://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData", echo=False)
         return engine
 
     except Exception as e:
