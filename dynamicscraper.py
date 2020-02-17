@@ -85,11 +85,11 @@ if __name__ == '__main__':
     # Function call below is commented out after first run of script as we only need to create table once.
     # createDynamicTable()
 
-    start_time = time.time()
+    #start_time = time.time()
 
-    while True:
-        standData = getJson()
-        populateDynamicTable(standData)
-
+    #while True:
+    standData = getJson()
+    populateDynamicTable(standData)
+        #commented out the timer below. Decided to run as a cron job on EC2 instance instead.
         # wait 5 minutes (300 secs), and run the above again.
-        time.sleep(300.0 - ((time.time() - start_time) % 300.0))
+        #time.sleep(300.0 - ((time.time() - start_time) % 300.0))
