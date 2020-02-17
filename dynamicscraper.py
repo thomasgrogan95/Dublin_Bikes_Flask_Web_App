@@ -19,7 +19,7 @@ def connectDB():
     ''' Connect to RDS MySQL Database '''
 
     try:
-        # http://docs.sqlalchemy.org/en/latest/core/engines.html
+        # https://docs.sqlalchemy.org/en/13/core/engines.html
         engine = create_engine("mysql+pymysql://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData", echo=False)
         return engine
 
@@ -34,7 +34,6 @@ def createDynamicTable():
      available_bike_stands, last_update '''
 
     # https://www.pythonsheets.com/notes/python-sqlalchemy.html
-    # https://stackoverflow.com/questions/19479853/why-do-we-need-to-use-3-quotes-while-executing-sql-query-from-python-cursor
     sqlcreate = "CREATE TABLE DynamicData (number INTEGER NOT NULL, status VARCHAR (128), available_bikes INTEGER, available_bike_stands INTEGER, last_update TIMESTAMP)"
 
     try:
@@ -84,12 +83,6 @@ if __name__ == '__main__':
 
     # Function call below is commented out after first run of script as we only need to create table once.
     # createDynamicTable()
-
-    #start_time = time.time()
-
-    #while True:
     standData = getJson()
     populateDynamicTable(standData)
-        #commented out the timer below. Decided to run as a cron job on EC2 instance instead.
-        # wait 5 minutes (300 secs), and run the above again.
-        #time.sleep(300.0 - ((time.time() - start_time) % 300.0))
+        
