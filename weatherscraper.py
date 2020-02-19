@@ -13,7 +13,7 @@ weatherData = json.loads(response.text)
 # Creating SQL engine and making connection 
 def connectDB():
     try:
-        engine = create_engine('mysql+pymysql://admin:weatherdata@weatherdb.cgws7adre1tm.eu-west-1.rds.amazonaws.com:3306/weather_schema', echo=False)
+        engine = create_engine('mysql+pymysql://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData', echo=False)
         connection = engine.connect()
 
     except Exception as e:
