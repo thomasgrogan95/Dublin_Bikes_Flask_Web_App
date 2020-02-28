@@ -1,10 +1,45 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, g, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+import pymysql
+import urllib.request
+import simplejson
+import json
 
 app = Flask(__name__)
 
+
+def connectDB():
+    ''' Create a connection to our AWS database '''
+    
+    try:
+        # http://docs.sqlalchemy.org/en/latest/core/engines.html
+        engine = create_engine("mysql+pymysql://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData", echo=True)
+        return engine
+
+    except Exception as e:
+        # if there is an error in carrying out the above, print the error
+        print("Error:", type(e))
+        print(e)
+
+
 @app.route("/")
 def home():
-    return render_template("javascriptMap.html")
-    
+    returnData = {}
+    returnData['Title'] = "Dublin Bikes"
+    return render_template("javascriptMap.html", **returnData)
+
+
+@app.route("/stations")
+def get_stations():
+    engine = connectDB()
+    stations = []
+    conn=engine.connect()
+    rows = conn.execute("SELECT * from StaticData;")
+    for row in rows:
+        stations.append(dict(row))
+    return jsonify(stations)
+
+
 if __name__ == "__main__":
     app.run(debug=True)

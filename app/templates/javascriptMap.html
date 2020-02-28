@@ -1,19 +1,41 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Google Map</title>
-    <style>
-        #map {
-            height: 600px;
-            width: 80%;
-            margin-left: 10%;
-            margin-right: 10%;
-        }
-    </style>
-</head>
-<body>
-    <div id="map"></div>
-    <script>
+    <head>
+        <title>
+            {{ Title }}
+        </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <style>
+            #map {
+                height: 450px;
+                width: 80%;
+                margin-left: 10%;
+                margin-right: 10%;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="header">
+            <h1>Dublin Bikes</h1>
+        </div>
+
+        <div id="map">
+         
+        </div>
+        
+        <div id="information">
+            
+        </div>
+        
+        
+        <div id="dataAnalytics">
+             
+        </div>
+        
+        <script>
+        var map;
+       
 
         function initMap() {
             var options = {
@@ -23,14 +45,58 @@
                     lng: -6.269827
                 }
             }
-            var map = new google.maps.Map(document.getElementById('map'), options);
 
+            var xmlhttp = new XMLHttpRequest();
+            var url = "/stations";
+            var latitudeArray = [];
+            var longitudeArray = [];
+            var nameArray = [];
+            var numberArray = [];
+            var data;
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var data = JSON.parse(xmlhttp.response);
+
+                    for (var j = 0; j < data.length; j++) {
+                        latitudeArray.push(data[j].latitude)
+                        longitudeArray.push(data[j].longitude)
+                        nameArray.push(data[j].name)
+                        numberArray.push(data[j].number)
+
+                        var marker = new google.maps.Marker({
+                            position: {
+                                lat: latitudeArray[j],
+                                lng: longitudeArray[j]
+                            },
+                            map: map,
+                            content: nameArray[j],
+                            title: nameArray[j],
+                            icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
+                        })
+                
+                        var infowindow = new google.maps.InfoWindow({});
+                        marker.addListener('click', function() {
+                            infowindow.setContent(this.content);
+                            infowindow.open(map, this);
+                        });
         
+                    }
+                }
             }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap"
-        async defer>
-    </script>
-</body>
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
 
+            
+            var map = new google.maps.Map(document.getElementById('map'), options);
+            
+        }
+        
+        
+
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
+        </script>
+    </body>
+    
 </html>

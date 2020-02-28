@@ -1,0 +1,41 @@
+body {
+    background-color: white;
+    margin: 0px;
+    padding: 0px;
+}
+
+html {
+    margin: 0px;
+    padding: 0px;
+}
+
+#header {
+    color: black;
+    text-align: center;
+    background-color: grey;
+    margin: 0 auto;
+    padding: 0.5%;
+}
+
+h1 {
+    margin: 0 auto;
+    }
+
+.map, .info, .chart {
+    height: 100%;
+    width: 100%;
+}
+
+#map {
+    height: 600px;
+    width: 75%;
+    float: left;}
+
+
+#information {
+    float: left;
+    width: 25%;
+    height: 600px;
+    background-color: aquamarine;
+}
+
