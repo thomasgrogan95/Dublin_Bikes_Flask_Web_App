@@ -40,6 +40,18 @@ def get_stations():
         stations.append(dict(row))
     return jsonify(stations)
 
+@app.route("/dynamicData/<station_id>")
+def get_dynamic_data(station_id):
+    engine = connectDB()
+    stationData = []
+    conn=engine.connect()
+    sql = "SELECT * FROM DynamicData where number = " + station_id + " order by last_update DESC limit 1;"
+    rows = conn.execute(sql)
+    for row in rows:
+        stationData.append(dict(row))
+    return jsonify(stationData)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

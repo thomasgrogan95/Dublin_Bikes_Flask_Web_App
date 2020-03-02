@@ -70,15 +70,29 @@
                                 lng: longitudeArray[j]
                             },
                             map: map,
-                            content: nameArray[j],
+                            
                             title: nameArray[j],
+                            station_number: numberArray[j],
                             icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
-                
+                        marker.metadata = {type: "point", id: numberArray[j]};
                         var infowindow = new google.maps.InfoWindow({});
                         marker.addListener('click', function() {
-                            infowindow.setContent(this.content);
+                            console.log(this.station_number);
+                            infowindow.setContent("");
+                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(data){
+                                console.log(data);
+                                console.log(data[0].available_bikes);
+                                available_bikes = data[0].available_bikes;
+                                available_stands = data[0].available_bike_stands;
+                                content = "<p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p>"
+                                //console.log(bikes);
+                                infowindow.setContent(content);
+                            })
+                            
+                            
                             infowindow.open(map, this);
+                            
                         });
         
                     }
