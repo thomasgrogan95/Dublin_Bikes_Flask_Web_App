@@ -52,6 +52,7 @@
             var longitudeArray = [];
             var nameArray = [];
             var numberArray = [];
+            var bankingArray = [];
             var data;
 
             xmlhttp.onreadystatechange = function () {
@@ -63,6 +64,13 @@
                         longitudeArray.push(data[j].longitude)
                         nameArray.push(data[j].name)
                         numberArray.push(data[j].number)
+                        if (data[j].banking = "True") {
+                            bankingArray.push("Yes")
+                        }
+                        else {
+                            bankingArray.push("No")
+                        }
+
 
                         var marker = new google.maps.Marker({
                             position: {
@@ -73,19 +81,21 @@
                             
                             title: nameArray[j],
                             station_number: numberArray[j],
+                            banking: bankingArray[j],
                             icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
                         marker.metadata = {type: "point", id: numberArray[j]};
                         var infowindow = new google.maps.InfoWindow({});
                         marker.addListener('click', function() {
-                            console.log(this.station_number);
+                            name = this.title;
+                            banking = this.banking;
                             infowindow.setContent("");
                             $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(data){
                                 console.log(data);
                                 console.log(data[0].available_bikes);
                                 available_bikes = data[0].available_bikes;
                                 available_stands = data[0].available_bike_stands;
-                                content = "<p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p>"
+                                content = "" + name + "<p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p><p> Banking: " + banking + "</p>"
                                 //console.log(bikes);
                                 infowindow.setContent(content);
                             })
