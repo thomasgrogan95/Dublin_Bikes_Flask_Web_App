@@ -91,11 +91,12 @@
                             banking = this.banking;
                             infowindow.setContent("");
                             $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(data){
-                                console.log(data);
-                                console.log(data[0].available_bikes);
+                                //console.log(data);
+                               // console.log(data[0].available_bikes);
                                 available_bikes = data[0].available_bikes;
                                 available_stands = data[0].available_bike_stands;
-                                content = "" + name + "<p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p><p> Banking: " + banking + "</p>"
+                                status = data[0].status;
+                                content = "" + name + "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p><p> Banking: " + banking + "</p>"
                                 //console.log(bikes);
                                 infowindow.setContent(content);
                             })
