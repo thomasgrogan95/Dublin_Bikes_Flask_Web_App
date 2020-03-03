@@ -27,7 +27,7 @@ def connectDB():
 def home():
     returnData = {}
     returnData['Title'] = "Dublin Bikes"
-    return render_template("javascriptMap.html", **returnData)
+    return render_template("Index.html", **returnData)
 
 
 @app.route("/stations")
