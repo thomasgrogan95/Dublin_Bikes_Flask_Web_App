@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            {{ Title }}
+        </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <style>
+            #map {
+                height: 450px;
+                width: 80%;
+                margin-left: 10%;
+                margin-right: 10%;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="header">
+            <h1>Dublin Bikes</h1>
+        </div>
+
+        <div id="map">
+         
+        </div>
+        
+        <div id="information">
+            <div id ="drop">
+                <select id="stations" name="Select Station"></select>
+            </div>
+        </div>
+        
+        
+        <div id="dataAnalytics">
+             
+        </div>
+        
+        <script>
+        var map;
+       
+
+        function initMap() {
+            var options = {
+                zoom: 13,
+                center: {
+                    lat: 53.347432,
+                    lng: -6.269827
+                }
+            }
+
+            var xmlhttp = new XMLHttpRequest();
+            var url = "/stations";
+            var latitudeArray = [];
+            var longitudeArray = [];
+            var nameArray = [];
+            var numberArray = [];
+            var bankingArray = [];
+            var data;
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    var data = JSON.parse(xmlhttp.response);
+
+                    for (var j = 0; j < data.length; j++) {
+                        latitudeArray.push(data[j].latitude)
+                        longitudeArray.push(data[j].longitude)
+                        nameArray.push(data[j].name)
+                        numberArray.push(data[j].number)
+                        if (data[j].banking = "True") {
+                            bankingArray.push("Yes")
+                        }
+                        else {
+                            bankingArray.push("No")
+                        }
+
+
+                        var marker = new google.maps.Marker({
+                            position: {
+                                lat: latitudeArray[j],
+                                lng: longitudeArray[j]
+                            },
+                            map: map,
+                            
+                            title: nameArray[j],
+                            station_number: numberArray[j],
+                            banking: bankingArray[j],
+                            icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
+                        })
+                        marker.metadata = {type: "point", id: numberArray[j]};
+                        var infowindow = new google.maps.InfoWindow({});
+                        marker.addListener('click', function() {
+                            name = this.title;
+                            banking = this.banking;
+                            infowindow.setContent("");
+                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(data){
+                                //console.log(data);
+                               // console.log(data[0].available_bikes);
+                                available_bikes = data[0].available_bikes;
+                                available_stands = data[0].available_bike_stands;
+                                status = data[0].status;
+                                content = "" + name + "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p><p> Banking: " + banking + "</p>"
+                                //console.log(bikes);
+                                infowindow.setContent(content);
+                            })
+                            
+                            
+                            infowindow.open(map, this);
+                            
+                        });
+        
+                    }
+                }
+            }
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+
+            
+            var map = new google.maps.Map(document.getElementById('map'), options);
+            
+        }
+        
+        
+
+        </script>
+        <script>
+            var xmlhttp1 = new XMLHttpRequest();
+            var url = "http://127.0.0.1:5000/stations";
+            var dropdownName = [];
+            var dropdownValue = [];
+            var defaultValue = "Select Station";
+            xmlhttp1.onreadystatechange = function () {
+                if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                    dropdownData = JSON.parse(xmlhttp1.responseText);
+                    for (var j = 0; j < dropdownData.length; j++) {
+                        dropdownName.push(dropdownData[j].name)
+                        dropdownValue.push(dropdownData[j].number)
+                    }
+                }
+            dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
+            for (var i = 0; i < dropdownName.length; i++){
+            dropDownMenu += "<option value=" + dropdownValue[i] + ">" +  dropdownName[i]  + "</option>";
+            console.log(dropDownMenu);
+                }
+                document.getElementById("stations").innerHTML = dropDownMenu;
+            }
+            xmlhttp1.open("GET", url, true);
+            xmlhttp1.send();
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
+        </script>
+    </body>
+    
+</html>
