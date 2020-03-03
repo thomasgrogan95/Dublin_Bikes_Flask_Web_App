@@ -25,7 +25,9 @@
         </div>
         
         <div id="information">
-            
+            <div id ="drop">
+                <select id="stations" name="Select Station"></select>
+            </div>
         </div>
         
         
@@ -119,6 +121,30 @@
         
         
 
+        </script>
+        <script>
+            var xmlhttp1 = new XMLHttpRequest();
+            var url = "http://127.0.0.1:5000/stations";
+            var dropdownName = [];
+            var dropdownValue = [];
+            var defaultValue = "Select Station";
+            xmlhttp1.onreadystatechange = function () {
+                if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                    dropdownData = JSON.parse(xmlhttp1.responseText);
+                    for (var j = 0; j < dropdownData.length; j++) {
+                        dropdownName.push(dropdownData[j].name)
+                        dropdownValue.push(dropdownData[j].number)
+                    }
+                }
+            dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
+            for (var i = 0; i < dropdownName.length; i++){
+            dropDownMenu += "<option value=" + dropdownValue[i] + ">" +  dropdownName[i]  + "</option>";
+            console.log(dropDownMenu);
+                }
+                document.getElementById("stations").innerHTML = dropDownMenu;
+            }
+            xmlhttp1.open("GET", url, true);
+            xmlhttp1.send();
         </script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
         </script>
