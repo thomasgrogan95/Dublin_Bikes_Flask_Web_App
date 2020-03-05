@@ -35,7 +35,7 @@ def connectDB():
     icon = data['icon']
     rainProb = data['precipProbability']
     rainIntensity = data['precipIntensity']
-    rainType = data['precipType']
+    # rainType = data['precipType']
     temp = ((data['temperature'] - 32) * (5/9))
     windSpeed = data['windSpeed']
 
@@ -45,7 +45,7 @@ def connectDB():
     # sunSet = currentDaily['sunsetTime']
 
 # Sending data to SQL table
-    sqlpopulate = "INSERT INTO weatherData VALUES ('" + str(date) + "','" + str(time) + "','" + str(summary) + "', '" + str(icon) + "', '" + str(rainProb) + "', '" + str(rainIntensity) + "', '" + str(rainType) + "', '" + str(temp) + "', '" + str(windSpeed) + "');"
+    sqlpopulate = "INSERT INTO weatherData VALUES ('" + str(date) + "','" + str(time) + "','" + str(summary) + "', '" + str(icon) + "', '" + str(rainProb) + "', '" + str(rainIntensity) + "', '" + str(temp) + "', '" + str(windSpeed) + "');"
     try:    
         engine.execute(sqlpopulate)
 
