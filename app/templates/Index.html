@@ -5,14 +5,6 @@
             {{ Title }}
         </title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <style>
-            #map {
-                height: 450px;
-                width: 80%;
-                margin-left: 10%;
-                margin-right: 10%;
-            }
-        </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
     <body>
@@ -24,9 +16,20 @@
          
         </div>
         
+        <!-- Parent Information Div -->
         <div id="information">
+
+            <!-- Div for dropdown menu -->
             <div id ="drop">
                 <select id="stations" name="Select Station"></select>
+            </div>
+
+            <div id="dropStationInfo">
+            </div>
+
+            <!-- Div showing weather data -->
+            <div id="weatherInfo">
+
             </div>
         </div>
         
@@ -56,9 +59,6 @@
             var numberArray = [];
             var bankingArray = [];
             var data;
-            var markerArray = [];
-            var defaultValue = "Select Station";
-            var dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -69,7 +69,6 @@
                         longitudeArray.push(data[j].longitude)
                         nameArray.push(data[j].name)
                         numberArray.push(data[j].number)
-                        
                         if (data[j].banking = "True") {
                             bankingArray.push("Yes")
                         }
@@ -77,7 +76,6 @@
                             bankingArray.push("No")
                         }
 
-                        dropDownMenu += "<option value=" + numberArray[j] + ">" +  nameArray[j]  + "</option>";
 
                         var marker = new google.maps.Marker({
                             position: {
@@ -91,23 +89,20 @@
                             banking: bankingArray[j],
                             icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
-
                         marker.metadata = {type: "point", id: numberArray[j]};
-                        markerArray.push(marker);
-
                         var infowindow = new google.maps.InfoWindow({});
-
                         marker.addListener('click', function() {
                             name = this.title;
                             banking = this.banking;
                             infowindow.setContent("");
                             $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(data){
-                                
+                                //console.log(data);
+                               // console.log(data[0].available_bikes);
                                 available_bikes = data[0].available_bikes;
                                 available_stands = data[0].available_bike_stands;
                                 status = data[0].status;
                                 content = "" + name + "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p><p> Banking: " + banking + "</p>"
-                                
+                                //console.log(bikes);
                                 infowindow.setContent(content);
                             })
                             
@@ -117,20 +112,21 @@
                         });
         
                     }
-                    document.getElementById("stations").innerHTML = dropDownMenu;
-                    console.log(markerArray);
                 }
             }
             xmlhttp.open("GET", url, true);
             xmlhttp.send();
 
+            
             var map = new google.maps.Map(document.getElementById('map'), options);
             
         }
+        
+        
 
         </script>
         <script>
-           /* var xmlhttp1 = new XMLHttpRequest();
+            var xmlhttp1 = new XMLHttpRequest();
             var url = "http://127.0.0.1:5000/stations";
             var dropdownName = [];
             var dropdownValue = [];
@@ -145,15 +141,39 @@
                 }
             dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
             for (var i = 0; i < dropdownName.length; i++){
-                dropDownMenu += "<option value=" + dropdownValue[i] + ">" +  dropdownName[i]  + "</option>";
+            dropDownMenu += "<option value=" + dropdownValue[i] + ">" +  dropdownName[i]  + "</option>";
                 }
                 document.getElementById("stations").innerHTML = dropDownMenu;
             }
             xmlhttp1.open("GET", url, true);
-            xmlhttp1.send(); */
+            xmlhttp1.send();
         </script>
+
+        <script>
+            var xmlhttp = new XMLHttpRequest();
+            var url = "/weather"
+            var weather;
+            var weatherDislplay = "";
+
+            $.getJSON("/weather", null, function(weather){
+                console.log(weather);
+                
+                weatherDislplay += "<p>" + weather[0].date + ' ' + weather[0].time + "</p>"
+                weatherDislplay += "<p> Status: " + weather[0].status + "</p>"
+                weatherDislplay += "<p> Icon: " + weather[0].icon + "</p>"
+                weatherDislplay += "<p> Rain Probability: " + weather[0].rainProb + "</p>"
+                weatherDislplay += "<p>Rain Intensity: " + weather[0].rainIntensity + "</p>"
+                weatherDislplay += "<p>Rain Type: " + weather[0].rainType + "</p>"
+                weatherDislplay += "<p>Temperature: " + weather[0].temp + "</p>"
+                weatherDislplay += "<p>Wind Speed: " + weather[0].windSpeed + "</p>"
+                document.getElementById("weatherInfo").innerHTML = weatherDislplay;
+
+            })
+
+        </script>
+
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
-        </script> 
+        </script>
     </body>
     
 </html>
