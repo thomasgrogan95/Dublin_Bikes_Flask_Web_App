@@ -40,6 +40,16 @@ def get_stations():
         stations.append(dict(row))
     return jsonify(stations)
 
+@app.route("/weather")
+def getWeather():
+    engine = connectDB()
+    weather = []
+    conn = engine.connect()
+    rows = conn.execute("SELECT * FROM DynamicData.weatherData order by DATE desc LIMIT 1;")
+    for row in rows:
+        weather.append(dict(row))
+    return jsonify(weather)
+
 @app.route("/dynamicData/<station_id>")
 def get_dynamic_data(station_id):
     engine = connectDB()

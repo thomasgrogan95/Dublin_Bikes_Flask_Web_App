@@ -27,15 +27,24 @@ h1 {
 }
 
 #map {
-    height: 600px;
+    height: 500px;
     width: 75%;
     float: left;}
 
 
 #information {
     float: left;
+    position: relative;
     width: 25%;
-    height: 600px;
-    background-color: aquamarine;
+    height: 500px;
+    background-color: rgba(135, 197, 222);
 }
 
+#weatherInfo {
+    position: absolute;
+    bottom: 0;
+}
+
+#dropStationInfo {
+    background-color: rgb(135, 197, 222);
+}
