@@ -56,6 +56,9 @@
             var numberArray = [];
             var bankingArray = [];
             var data;
+            var markerArray = [];
+            var defaultValue = "Select Station";
+            var dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -66,6 +69,7 @@
                         longitudeArray.push(data[j].longitude)
                         nameArray.push(data[j].name)
                         numberArray.push(data[j].number)
+                        
                         if (data[j].banking = "True") {
                             bankingArray.push("Yes")
                         }
@@ -73,6 +77,7 @@
                             bankingArray.push("No")
                         }
 
+                        dropDownMenu += "<option value=" + numberArray[j] + ">" +  nameArray[j]  + "</option>";
 
                         var marker = new google.maps.Marker({
                             position: {
@@ -86,20 +91,23 @@
                             banking: bankingArray[j],
                             icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
+
                         marker.metadata = {type: "point", id: numberArray[j]};
+                        markerArray.push(marker);
+
                         var infowindow = new google.maps.InfoWindow({});
+
                         marker.addListener('click', function() {
                             name = this.title;
                             banking = this.banking;
                             infowindow.setContent("");
                             $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(data){
-                                //console.log(data);
-                               // console.log(data[0].available_bikes);
+                                
                                 available_bikes = data[0].available_bikes;
                                 available_stands = data[0].available_bike_stands;
                                 status = data[0].status;
                                 content = "" + name + "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p><p> Banking: " + banking + "</p>"
-                                //console.log(bikes);
+                                
                                 infowindow.setContent(content);
                             })
                             
@@ -109,21 +117,20 @@
                         });
         
                     }
+                    document.getElementById("stations").innerHTML = dropDownMenu;
+                    console.log(markerArray);
                 }
             }
             xmlhttp.open("GET", url, true);
             xmlhttp.send();
 
-            
             var map = new google.maps.Map(document.getElementById('map'), options);
             
         }
-        
-        
 
         </script>
         <script>
-            var xmlhttp1 = new XMLHttpRequest();
+           /* var xmlhttp1 = new XMLHttpRequest();
             var url = "http://127.0.0.1:5000/stations";
             var dropdownName = [];
             var dropdownValue = [];
@@ -138,16 +145,15 @@
                 }
             dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
             for (var i = 0; i < dropdownName.length; i++){
-            dropDownMenu += "<option value=" + dropdownValue[i] + ">" +  dropdownName[i]  + "</option>";
-            console.log(dropDownMenu);
+                dropDownMenu += "<option value=" + dropdownValue[i] + ">" +  dropdownName[i]  + "</option>";
                 }
                 document.getElementById("stations").innerHTML = dropDownMenu;
             }
             xmlhttp1.open("GET", url, true);
-            xmlhttp1.send();
+            xmlhttp1.send(); */
         </script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
-        </script>
+        </script> 
     </body>
     
 </html>
