@@ -65,23 +65,16 @@
             var nameArray = [];
             var numberArray = [];
             var bankingArray = [];
-            var data;
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    var data = JSON.parse(xmlhttp.response);
-
+                    data = JSON.parse(xmlhttp.response);
                     for (var j = 0; j < data.length; j++) {
                         latitudeArray.push(data[j].latitude)
                         longitudeArray.push(data[j].longitude)
                         nameArray.push(data[j].name)
                         numberArray.push(data[j].number)
-                        if (data[j].banking = "True") {
-                            bankingArray.push("Yes")
-                        }
-                        else {
-                            bankingArray.push("No")
-                        }
+                        bankingArray.push(data[j].banking)
 
 
                         var marker = new google.maps.Marker({
@@ -93,23 +86,22 @@
                             
                             title: nameArray[j],
                             station_number: numberArray[j],
-                            banking: bankingArray[j],
+                            banking_marker: bankingArray[j],
                             icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
                         marker.metadata = {type: "point", id: numberArray[j]};
                         var infowindow = new google.maps.InfoWindow({});
                         marker.addListener('click', function() {
                             name = this.title;
-                            banking = this.banking;
+                            banking_marker = this.banking_marker;
                             infowindow.setContent("");
-                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(data){
+                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(response){
                                 //console.log(data);
                                // console.log(data[0].available_bikes);
-                                available_bikes = data[0].available_bikes;
-                                available_stands = data[0].available_bike_stands;
-                                status = data[0].status;
-                                content = "" + name + "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p><p> Banking: " + banking + "</p>"
-                                //console.log(bikes);
+                                available_bikes = response[0].available_bikes;
+                                available_stands = response[0].available_bike_stands;
+                                status = response[0].status;
+                                content = "" + name + "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p><p> Banking: " + banking_marker + "</p>"
                                 infowindow.setContent(content);
                             })
                             
@@ -119,6 +111,7 @@
                         });
         
                     }
+                    //console.log(bankingArray) 
                 }
             }
             xmlhttp.open("GET", url, true);
@@ -134,7 +127,7 @@
         </script>
         <script>
             var xmlhttp1 = new XMLHttpRequest();
-            var url = "http://127.0.0.1:5000/stations";
+            var url1 = "http://127.0.0.1:5000/stations";
             var dropdownName = [];
             var dropdownValue = [];
             var defaultValue = "Select Station";
@@ -152,18 +145,16 @@
                 }
                 document.getElementById("stations").innerHTML = dropDownMenu;
             }
-            xmlhttp1.open("GET", url, true);
+            xmlhttp1.open("GET", url1, true);
             xmlhttp1.send();
         </script>
 
         <script>
-            var xmlhttp = new XMLHttpRequest();
-            var url = "/weather"
             var weather;
             var weatherDislplay = "";
 
             $.getJSON("/weather", null, function(weather){
-                console.log(weather);
+                //console.log(weather);
                 
                 weatherDislplay += "<p>" + weather[0].date + ' ' + weather[0].time + "</p>"
                 weatherDislplay += "<p> Status: " + weather[0].status + "</p>"
@@ -176,7 +167,21 @@
                 document.getElementById("weatherInfo").innerHTML = weatherDislplay;
 
             })
+            
+            var sel = document.getElementById("stations");
+            sel.addEventListener("change", myFunction);
 
+            function myFunction() {
+                var bikeInfo = document.getElementById("dropStationInfo");
+                bikeInfo.innerHTML = "";
+                value = sel.value;
+                $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function(info){
+                                available_bikes = info[0].available_bikes;
+                                available_stands = info[0].available_bike_stands;
+                                status = info[0].status;
+                                bikeInfo.innerHTML += "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p>"
+                            })
+            }
         </script>
 
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">

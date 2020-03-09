@@ -35,7 +35,7 @@ def get_stations():
     engine = connectDB()
     stations = []
     conn=engine.connect()
-    rows = conn.execute("SELECT * from StaticData;")
+    rows = conn.execute("SELECT * from StaticData order by number;")
     for row in rows:
         stations.append(dict(row))
     return jsonify(stations)
