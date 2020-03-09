@@ -103,7 +103,7 @@
                                 available_bikes = data[0].available_bikes;
                                 available_stands = data[0].available_bike_stands;
                                 status = data[0].status;
-                                if (status = "OPEN"){
+                                if (status == "OPEN"){
                                     content += "<p class=name>" + name + "</p>";
                                 } else {
                                     content += "<p class=name>" + name + "</p>";
@@ -118,9 +118,9 @@
                                 
                                 content += "<div id=imagediv><img src=https://salonproff.ie/wp-content/uploads/2017/05/visa-logo-png-image-4.png>"
                                 content += "<img src='/static/mastercard.png'>";
-                                if (bankingArray[j] = "True"){
+                                if (banking_marker == "True"){
                                 content += "<img src='/static/banking.png'>";
-                                } else if (bankingArray[j] = "False") {
+                                } else if (banking_marker == "False") {
                                     content += "<img src='/static/nobanking.png'>";
                                 }
                                 // content += "<p>Banking" + banking + "</p>";
