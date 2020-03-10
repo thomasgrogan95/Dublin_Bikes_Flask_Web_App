@@ -27,6 +27,10 @@
             <div id="dropStationInfo">
             </div>
 
+            <div id="nearestInfo">
+
+            </div>
+
             <!-- Div showing weather data -->
             <div id="weatherInfo">
                 <canvas id="icon1" width="128" height="128"></canvas>
@@ -36,17 +40,14 @@
         
         <div id="dataAnalytics">
              
-        </div>
-            
-
+        </div>    
         <script>
-                        function success(pos) {
-            window.crd = pos.coords;
-            console.log(pos.coords);
-            
-            }
-
-            navigator.geolocation.getCurrentPosition(success); 
+            // var coordArray = [];
+            // function success(pos) {
+            //     lat = pos.coords.latitude;
+            //     long = pos.coords.longitude;
+            // }
+            // navigator.geolocation.getCurrentPosition(success);  
         var map;
        
 
@@ -130,7 +131,7 @@
                         });
         
                     }
-                    //console.log(bankingArray) 
+                    //console.log(bankingArray)                     
                 }
             }
             xmlhttp.open("GET", url, true);
@@ -212,8 +213,82 @@
             }
         </script>
         <script>
-  
-        </script>
+        var currentLocation = [];
+
+        function success(pos) {
+            crd = pos.coords;
+            console.log(pos.coords);
+            currentLocation.push({
+                lat: pos.coords.latitude,
+                long: pos.coords.longitude
+            });
+        }
+        
+        navigator.geolocation.getCurrentPosition(success);
+
+
+
+    </script>
+    <script>
+        var long = [];
+        var lat = [];
+        var dict = [];
+        var distanceArray = [];
+
+
+        function coordinates() {
+            var xmlhttp1 = new XMLHttpRequest();
+            var url = "http://127.0.0.1:5000/stations";
+            xmlhttp1.onreadystatechange = function () {
+                if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                    coorddata = JSON.parse(xmlhttp1.responseText);
+                    for (var j = 0; j < coorddata.length; j++) {
+                        key = coorddata[j].name,
+                            latitude = coorddata[j].latitude,
+                            longitude = coorddata[j].longitude,
+                            currentLat = currentLocation[0].lat,
+                            currentLong = currentLocation[0].long
+
+                        distance = Math.sqrt((Math.pow((currentLong - coorddata[j].longitude), 2)) + (Math.pow((
+                             currentLat - coorddata[j].latitude), 2)));
+
+                        distanceArray.push({
+                            name: key,
+                            dist: distance
+                        });
+
+                    }
+                    var newDist;
+
+                    distance1 = Math.sqrt((Math.pow((currentLong - coorddata[0].longitude), 2)) + (Math.pow((
+                        currentLat - coorddata[0].latitude), 2)));
+
+                    for (var r = 0; r < coorddata.length; r++) {
+                        distance2 = Math.sqrt((Math.pow((currentLong - coorddata[r].longitude), 2)) + (Math.pow((
+                            currentLat - coorddata[r].latitude), 2)));
+                         if (distance2 < distance1) {
+                            var newDist = distance2
+                            var distance1 = distance2
+                            var name = coorddata[r].name
+                        }
+                    }
+                        nearest = "<p>Nearest Station is " + name +"</p>";
+                        nearest += "<p> It is " + newDist + " away.</p>";
+                        nearest += "<p>====================<br>Display Info for this Station Here<br>====================<br><br>If user uses Dropdown, replace this with the relevant data?</p>";
+                        
+                        
+                    
+                    document.getElementById("nearestInfo").innerHTML = nearest; 
+
+                }
+
+            }
+
+            xmlhttp1.open("GET", url, true);
+            xmlhttp1.send();
+        }
+        coordinates();
+    </script>  
 
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
         </script>
