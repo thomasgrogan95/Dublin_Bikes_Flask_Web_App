@@ -40,6 +40,16 @@ def get_stations():
         stations.append(dict(row))
     return jsonify(stations)
 
+@app.route("/occupancy")
+def get_occupancy():
+    engine = connectDB()
+    occupancyData = []
+    conn = engine.connect()
+    data = conn.execute("SELECT distinct DynamicData.number, DynamicData.available_bikes, DynamicData.available_bike_stands, DynamicData.last_update, StaticData.name, StaticData.banking, StaticData.latitude, StaticData.longitude, StaticData.total_stands FROM DynamicData.DynamicData, StaticData where DynamicData.number = StaticData.number order by last_update DESC limit 109;")
+    for row in data:
+        occupancyData.append(dict(row))
+    return jsonify(occupancyData)
+
 @app.route("/weather")
 def getWeather():
     engine = connectDB()
@@ -49,6 +59,7 @@ def getWeather():
     for row in rows:
         weather.append(dict(row))
     return jsonify(weather)
+
 
 @app.route("/dynamicData/<station_id>")
 def get_dynamic_data(station_id):
