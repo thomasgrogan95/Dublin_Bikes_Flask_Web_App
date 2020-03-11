@@ -63,22 +63,28 @@
             }
 
             var xmlhttp = new XMLHttpRequest();
-            var url = "/stations";
+            var url = "/occupancy";
             var latitudeArray = [];
             var longitudeArray = [];
             var nameArray = [];
             var numberArray = [];
             var bankingArray = [];
+            var totalStandsArray = [];
+            var availableBikesArray = [];
+
 
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     data = JSON.parse(xmlhttp.response);
+                    console.log(data)
                     for (var j = 0; j < data.length; j++) {
                         latitudeArray.push(data[j].latitude)
                         longitudeArray.push(data[j].longitude)
                         nameArray.push(data[j].name)
                         numberArray.push(data[j].number)
                         bankingArray.push(data[j].banking)
+                        totalStandsArray.push(data[j].total_stands)
+                        availableBikesArray.push(data[j].available_bikes)
 
 
                         var marker = new google.maps.Marker({
@@ -87,13 +93,22 @@
                                 lng: longitudeArray[j]
                             },
                             map: map,
-                            
                             title: nameArray[j],
                             station_number: numberArray[j],
                             banking_marker: bankingArray[j],
-                            icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
+                            available: (availableBikesArray[j]/totalStandsArray[j]),
+                           // icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
                         
+                        if (marker.available >= 0.50) {
+                            marker.setIcon('http://maps.google.com/mapfiles/ms/micons/green-dot.png');
+                            }
+                        else if ( marker.available >= 0.25) {
+                            marker.setIcon('http://maps.google.com/mapfiles/ms/micons/orange-dot.png');
+                        }
+                        else {
+                            marker.setIcon('http://maps.google.com/mapfiles/ms/micons/red-dot.png');
+                        }
                         
                         marker.metadata = {type: "point", id: numberArray[j]};
                         var infowindow = new google.maps.InfoWindow({});
