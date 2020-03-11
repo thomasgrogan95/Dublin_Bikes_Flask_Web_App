@@ -194,7 +194,7 @@
             sel.addEventListener("change", myFunction);
 
             function myFunction() {
-                var bikeInfo = document.getElementById("dropStationInfo");
+                var bikeInfo = document.getElementById("nearestInfo");
                 bikeInfo.innerHTML = "";
                 value = sel.value;
                 $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function(info){
