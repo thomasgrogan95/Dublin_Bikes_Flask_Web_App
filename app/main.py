@@ -73,6 +73,20 @@ def get_dynamic_data(station_id):
     return jsonify(stationData)
 
 
+@app.route("/hourlyData/<station>/<day>")
+def get_hourly_data(station, day):
+    engine = connectDB()
+    hourly = []
+    conn = engine.connect()
+
+    for hour in range(24):
+        sql = "SELECT AVG(available_bikes) FROM DynamicData WHERE number =" + str(station) + " AND EXTRACT(HOUR from last_update) =" + str(hour) + " AND WEEKDAY(last_update) =" + str(day) + ";"
+        hourlydata = conn.execute(sql)
+        for row in hourlydata:
+            hourly.append(dict(row))
+    return jsonify(hourly)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

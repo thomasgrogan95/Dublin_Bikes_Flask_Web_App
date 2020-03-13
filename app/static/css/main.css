@@ -117,6 +117,18 @@ img {
     float: right;
 }
 
+
+.chart {
+    width: 100vw; 
+    min-height: 450px;
+}
+
+.row {
+    width: 100vw;
+    clear: left;
+    margin:0 !important;
+}
+
 /* .gm-style-iw.gm-style-iw-c {
     margin: 0;
     padding: 0;
