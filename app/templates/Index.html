@@ -5,7 +5,9 @@
             {{ Title }}
         </title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <script src="/static/js/script.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
     <body>
         <div id="header">
@@ -37,10 +39,9 @@
             </div>
         </div>
         
-        
         <div id="dataAnalytics">
-             
-        </div> 
+            <div id="chart_div" class="chart"></div>
+        </div>
 
 <!--------------------------Google Map------------------------------------------->
         <script>
@@ -100,10 +101,10 @@
                            // icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
                         
-                        if (marker.available >= 0.50) {
+                        if (marker.available >= 0.25) {
                             marker.setIcon('http://maps.google.com/mapfiles/ms/micons/green-dot.png');
                             }
-                        else if ( marker.available >= 0.25) {
+                        else if ( marker.available > 0) {
                             marker.setIcon('http://maps.google.com/mapfiles/ms/micons/orange-dot.png');
                         }
                         else {
@@ -145,6 +146,7 @@
                                 infowindow.setContent(content);
                             })
                             infowindow.open(map, this);
+                            dailyGraph(this.station_number);
                         });
         
                     }
@@ -194,9 +196,10 @@
             sel.addEventListener("change", myFunction);
 
             function myFunction() {
-                var bikeInfo = document.getElementById("dropStationInfo");
+                var bikeInfo = document.getElementById("nearestInfo");
                 bikeInfo.innerHTML = "";
                 value = sel.value;
+                dailyGraph(value);
                 $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function(info){
                     available_bikes = info[0].available_bikes;
                     available_stands = info[0].available_bike_stands;
@@ -248,8 +251,6 @@
         }
         
         navigator.geolocation.getCurrentPosition(success);
-
-
 
     </script>
 
@@ -314,10 +315,10 @@
             xmlhttp1.send();
         }
         coordinates();
-    </script>  
+    </script>
 
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
-        </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
+    </script>
     </body>
 
 </html>

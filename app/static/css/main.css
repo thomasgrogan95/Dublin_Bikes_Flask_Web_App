@@ -117,6 +117,17 @@ img {
     float: right;
 }
 
+
+#chart_div {
+    width: 50vw; 
+    height: 370px;
+}
+
+#dataAnalytics {
+    display: inline-block;
+    width: 100vw; 
+}
+
 /* .gm-style-iw.gm-style-iw-c {
     margin: 0;
     padding: 0;
