@@ -77,7 +77,7 @@
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     data = JSON.parse(xmlhttp.response);
-                    console.log(data)
+                    // console.log(data)
                     for (var j = 0; j < data.length; j++) {
                         latitudeArray.push(data[j].latitude)
                         longitudeArray.push(data[j].longitude)
@@ -212,7 +212,7 @@
 <!-------------------------- Current Weather ------------------------------------------->
         <script>
             var weather;
-            var weatherDislplay = "";
+            var weatherDisplay = "";
 
             $.getJSON("/weather", null, function(weather){
 
@@ -220,20 +220,57 @@
                 var time = today.getHours() + ":" + today.getMinutes();  
                 console.log(time);
                 
-                weatherDislplay += "<p>" + weather[0].date + ' ' + time + "</p>"
+                weatherDisplay += "<p>" + weather[0].date + ' ' + time + "</p>"
 
+                // iconList = ['rain', 'partly-cloudy-day', 'cloudy','wind','partly-cloudy-night',
+                // 'clear-night','clear-day'];
 
+                var iconDict =  [{ 
+                    icon: 'rain',
+                    image: "<img div id='iconIMG' src='/static/images/rain.png'"
+                },
+                {
+                    icon: 'partly-cloudy-day',
+                    image: "<img div id='iconIMG' src='/static/images/partcloudy.png'>"
+                },
+                {
+                    icon: 'cloudy',
+                    image: "<img div id='iconIMG' src='/static/images/cloud.png'>"
+                },
+                {
+                    icon: 'wind',
+                    image: "<img div id='iconIMG' src='/static/images/wind.png'"
+                },
+                {
+                    icon: 'partly-cloudy-night',
+                    image: "<img div id='iconIMG' src='/static/images/cloudynight.png'>"
+                },
+                {
+                    icon: 'clear-night',
+                    image: "<img div id='iconIMG' src='/static/images/clearnight.png'"
+                },
+                {
+                    icon: 'clear-day',
+                    image: "<img div id='iconIMG' src='/static/images/clearday.png'"
+                }
+                ];                                                
 
-                
-                              
-                weatherDislplay += "<p> Status: " + weather[0].status + "</p>"
-                weatherDislplay += "<p> Icon: " + weather[0].icon + "</p>"
-                weatherDislplay += "<p> Rain Probability: " + weather[0].rainProb + "</p>"
-                weatherDislplay += "<p>Rain Intensity: " + weather[0].rainIntensity + "</p>"
-                // weatherDislplay += "<p>Rain Type: " + weather[0].rainType + "</p>"
-                weatherDislplay += "<p>Temperature: " + weather[0].temp + "</p>"
-                weatherDislplay += "<p>Wind Speed: " + weather[0].windSpeed + "</p>"
-                document.getElementById("weatherInfo").innerHTML = weatherDislplay;
+                for (var c = 0; c < iconDict.length; c ++){
+                    console.log(iconDict[c].icon);
+                    if (iconDict[c].icon == weather[0].icon){
+                        console.log("HIT");
+                        
+                        weatherDisplay += iconDict[c].image;                    
+                    }
+                }
+                weatherDisplay += "<p> Status: " + weather[0].status + "</p>"
+                weatherDisplay += "<p> Icon: " + weather[0].icon + "</p>"
+                weatherDisplay += "<p> Rain Probability: " + weather[0].rainProb + "</p>"
+                weatherDisplay += "<p>Rain Intensity: " + weather[0].rainIntensity + "</p>"
+                // weatherDisplay += "<p>Rain Type: " + weather[0].rainType + "</p>"
+                weatherDisplay += "<p>Temperature: " + weather[0].temp + "</p>"
+                weatherDisplay += "<p>Wind Speed: " + weather[0].windSpeed + "</p>"
+                document.getElementById("weatherInfo").innerHTML = weatherDisplay;
 
             })
             
@@ -301,9 +338,6 @@
                     }
                         nearest = "<p>Nearest Station is " + name +"</p>";
                         nearest += "<p> It is " + newDist + " away.</p>";
-                        nearest += "<p>====================<br>Display Info for this Station Here<br>====================<br><br>If user uses Dropdown, replace this with the relevant data?</p>";
-                        
-                        
                     
                     document.getElementById("nearestInfo").innerHTML = nearest; 
 
