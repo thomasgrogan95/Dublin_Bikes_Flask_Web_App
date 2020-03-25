@@ -118,15 +118,14 @@ img {
 }
 
 
-.chart {
-    width: 100vw; 
-    min-height: 450px;
+#chart_div {
+    width: 50vw; 
+    height: 370px;
 }
 
-.row {
-    width: 100vw;
-    clear: left;
-    margin:0 !important;
+#dataAnalytics {
+    display: inline-block;
+    width: 100vw; 
 }
 
 /* .gm-style-iw.gm-style-iw-c {
