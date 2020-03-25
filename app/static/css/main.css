@@ -126,3 +126,12 @@ img {
     width: 282px;
     height: 100px;
 } */
+
+#iconIMG {
+    color: yellow;
+    height: 50px;
+    width: 50px;
+    background-color: black;
+    margin-left: 40%;
+    margin-right: 20%;
+}
