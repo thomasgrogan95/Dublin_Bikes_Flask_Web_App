@@ -1,4 +1,4 @@
-html{
+html {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
@@ -14,18 +14,21 @@ html {
 }
 
 #header {
-    color: black;
+    color: White;
     text-align: center;
-    background-color: grey;
-    margin: 0 auto;
-    padding: 0.5%;
+    background-color: rgb(34, 40, 49);
+    margin: 0;
+    padding: 10px;
+    border-bottom: 2px solid white;
 }
 
 h1 {
     margin: 0 auto;
-    }
+}
 
-.map, .chart, .info{
+.map,
+.chart,
+.info {
     height: 100%;
     width: 100%;
 }
@@ -33,28 +36,33 @@ h1 {
 #map {
     height: 500px;
     width: 75%;
-    float: left;}
+    float: left;
+}
 
 
 #information {
     float: left;
     position: relative;
-    width: 25%;
+    width: 24%;
     height: 500px;
-    background-color: rgba(135, 197, 222);
+    /* background-color: rgba(135, 197, 222); */
+    background-color: rgb(34, 40, 49);
+    padding-left: 1%;
+
 }
 
-#weatherInfo {
+/* #weatherInfo {
     position: absolute;
     bottom: 0;
-}
+} */
 
 #dropStationInfo {
     background-color: rgb(135, 197, 222);
 }
 
 
-.avail_bikes, .avail_stands {
+.avail_bikes,
+.avail_stands {
     background: #cccccc;
     border-radius: 0.8em;
     display: inline-block;
@@ -62,7 +70,7 @@ h1 {
     line-height: 1.6em;
     /* margin-right: 10px; */
     text-align: center;
-    width: 1.6em; 
+    width: 1.6em;
     font-size: large;
 }
 
@@ -87,7 +95,8 @@ h1 {
     text-align: center;
 }
 
-#col1, #col2 {
+#col1,
+#col2 {
     /* display: inline-block; */
     text-align: center;
     width: 40%;
@@ -119,13 +128,15 @@ img {
 
 
 #chart_div {
-    width: 50vw; 
+    width: 50vw;
     height: 370px;
 }
 
 #dataAnalytics {
     display: inline-block;
-    width: 100vw; 
+    width: 100vw;
+    background-color: rgb(85, 96, 112);
+    border-top: 2px solid white;
 }
 
 /* .gm-style-iw.gm-style-iw-c {
@@ -139,10 +150,44 @@ img {
 } */
 
 #iconIMG {
-    color: yellow;
-    height: 50px;
-    width: 50px;
-    background-color: black;
-    margin-left: 40%;
-    margin-right: 20%;
+    height: 75px;
+    width: 75px;
+}
+
+#timeDiv {
+    color: white;
+    width: 100%;
+    font-family: Orbitron;
+    margin-bottom: 10%;
+    font-size: 20px;
+}
+
+#stat {
+    display: inline;
+    vertical-align: middle;
+    margin-right: 20px;
+    font-size: 35px;
+    font-weight: 10;
+    font-family: Orbitron;
+}
+
+#stationsdropdown {
+    background-color: white;
+}
+
+p {
+    color: white;
+    font-size: 20px;
+}
+
+button {
+    font-size: 16px;
+    background-color: rgb(85, 96, 112);
+    border: 1px black solid;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+#nearestInfo {
+    padding-bottom: 20px;
 }
