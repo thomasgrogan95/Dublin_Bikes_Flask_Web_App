@@ -45,7 +45,10 @@ def get_occupancy():
     engine = connectDB()
     occupancyData = []
     conn = engine.connect()
-    data = conn.execute("SELECT distinct DynamicData.number, DynamicData.available_bikes, DynamicData.available_bike_stands, DynamicData.last_update, StaticData.name, StaticData.banking, StaticData.latitude, StaticData.longitude, StaticData.total_stands FROM DynamicData.DynamicData, StaticData where DynamicData.number = StaticData.number order by last_update DESC limit 109;")
+    sql = """SELECT distinct number, available_bikes, available_bike_stands, total_stands, name, latitude, longitude, banking, last_update FROM (
+            SELECT distinct DynamicData.number, DynamicData.available_bikes, DynamicData.available_bike_stands, DynamicData.last_update, StaticData.name, StaticData.banking, StaticData.latitude, StaticData.longitude, StaticData.total_stands FROM DynamicData.DynamicData, StaticData where DynamicData.number = StaticData.number order by DynamicData.last_update DESC  
+                ) as hello group by number;"""
+    data = conn.execute(sql)
     for row in data:
         occupancyData.append(dict(row))
     return jsonify(occupancyData)
@@ -85,6 +88,20 @@ def get_day_data(station):
         for row in dailydata:
             daily.append(dict(row))
     return jsonify(daily)
+
+
+@app.route("/hourlyData/<station>/<day>")
+def get_hourly_data(station, day):
+    engine = connectDB()
+    hourly = []
+    conn = engine.connect()
+
+    for hour in range(0,24):
+        sql = "SELECT AVG(available_bikes) FROM DynamicData WHERE number =" + str(station) + " AND WEEKDAY(last_update) =" + str(day) + " AND HOUR(last_update) =" + str(hour) + ";"
+        hourlydata = conn.execute(sql)
+        for row in hourlydata:
+            hourly.append(dict(row))
+    return jsonify(hourly)
 
 
 

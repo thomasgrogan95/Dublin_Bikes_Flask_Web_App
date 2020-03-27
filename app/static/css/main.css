@@ -121,6 +121,13 @@ img {
 #chart_div {
     width: 50vw; 
     height: 370px;
+    float: left;
+}
+
+#hourly_div {
+    width: 50vw; 
+    height: 370px;
+    float: right;
 }
 
 #dataAnalytics {
