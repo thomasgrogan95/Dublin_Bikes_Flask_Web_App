@@ -1,61 +1,88 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>
-            {{ Title }}
-        </title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-        <script src="/static/js/script.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    </head>
-    <body>
-        <div id="header">
-            <h1>Dublin Bikes</h1>
+
+<head>
+    <title>
+        {{ Title }}
+    </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Orbitron" />
+    <script src="/static/js/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.klokantech.com/maptilerlayer/v1/index.js"></script>
+
+</head>
+
+<body>
+    <div id="header">
+        <h1>Dublin Bikes</h1>
+    </div>
+
+    <div id="map">
+
+    </div>
+
+    <!-- Parent Information Div -->
+    <div id="information">
+
+        <!-- Div for dropdown menu -->
+        <div id="drop">
+            <select id="stations" name="Select Station"></select>
         </div>
 
-        <div id="map">
-         
+        <div id="dropStationInfo">
         </div>
-        
-        <!-- Parent Information Div -->
-        <div id="information">
 
-            <!-- Div for dropdown menu -->
-            <div id ="drop">
-                <select id="stations" name="Select Station"></select>
-            </div>
+        <div id="nearestInfo">
+            <button onclick="calcRoute()"></button>
 
-            <div id="dropStationInfo">
-            </div>
-
-            <div id="nearestInfo">
-
-            </div>
-
-            <!-- Div showing weather data -->
-            <div id="weatherInfo">
-                <canvas id="icon1" width="128" height="128"></canvas>
-            </div>
         </div>
+
+        <!-- Div showing weather data -->
+       
+        <div id="timeDiv" onload="showTime()">
+            <canvas id="icon1" width="128" height="128"></canvas>
+        </div>
+        <div id="statusdiv">
+
+        </div>
+
+
+        <div id="weatherInfo">
+            <canvas id="icon1" width="128" height="128"></canvas>
+
         
         <div id="dataAnalytics">
             <div id="chart_div" class="chart"></div>
             <div id="hourly_div" class="chart"></div>
+
         </div>
 
-<!--------------------------Google Map------------------------------------------->
-        <script>
-            // var coordArray = [];
-            // function success(pos) {
-            //     lat = pos.coords.latitude;
-            //     long = pos.coords.longitude;
-            // }
-            // navigator.geolocation.getCurrentPosition(success); 
+    </div>
+
+    <div id="dataAnalytics">
+        <div id="chart_div" class="chart"></div>
+    </div>
+
+    <!--------------------------Google Map------------------------------------------->
+    <script>
+        currentLocation = [];
+
+        function success(pos) {
+            currentLocation.push({
+                lat: pos.coords.latitude,
+                long: pos.coords.longitude
+            }, );
+        }
+
+        navigator.geolocation.getCurrentPosition(success);
+
         var map;
-       
 
         function initMap() {
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
             var options = {
                 zoom: 13,
                 center: {
@@ -101,94 +128,131 @@
                             title: nameArray[j],
                             station_number: numberArray[j],
                             banking_marker: bankingArray[j],
-                            available: (availableBikesArray[j]/totalStandsArray[j]),
-                           // icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
+                            available: (availableBikesArray[j] / totalStandsArray[j]),
+                            // icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
-                        
+
+                        var currentMarker = new google.maps.Marker({
+                            position: {
+                                lat: currentLocation[0].lat,
+                                lng: currentLocation[0].long
+                            },
+                            map: map,
+                            icon: 'http://maps.google.com/mapfiles/ms/micons/blue.png'
+
+                        })
+
                         if (marker.available >= 0.25) {
                             marker.setIcon('http://maps.google.com/mapfiles/ms/micons/green-dot.png');
-                            }
-                        else if ( marker.available > 0) {
+                        } else if (marker.available > 0) {
                             marker.setIcon('http://maps.google.com/mapfiles/ms/micons/orange-dot.png');
-                        }
-                        else {
+                        } else {
                             marker.setIcon('http://maps.google.com/mapfiles/ms/micons/red-dot.png');
                         }
-                        
-                        marker.metadata = {type: "point", id: numberArray[j]};
+
+                        marker.metadata = {
+                            type: "point",
+                            id: numberArray[j]
+                        };
                         var infowindow = new google.maps.InfoWindow({});
-                        marker.addListener('click', function() {
+                        marker.addListener('click', function () {
                             name = this.title;
                             banking_marker = this.banking_marker;
                             infowindow.setContent("");
-                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null, function(data){
-                                content = "";
-                                available_bikes = data[0].available_bikes;
-                                available_stands = data[0].available_bike_stands;
-                                status = data[0].status;
-                                if (status == "OPEN"){
-                                    content += "<p class=name>" + name + "</p>";
-                                } else {
-                                    content += "<p class=name>" + name + "</p>";
-                                }
-        
+                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null,
+                                function (data) {
+                                    content = "";
+                                    available_bikes = data[0].available_bikes;
+                                    available_stands = data[0].available_bike_stands;
+                                    status = data[0].status;
+                                    if (status == "OPEN") {
+                                        content += "<p class=name>" + name + "</p>";
+                                    } else {
+                                        content += "<p class=name>" + name + "</p>";
+                                    }
 
-                                // content += "<p style=color:green> Status: " + status + "</p>"
-                                content += "<div id=modal><div id=col1><span class=avail_bikes>" + available_bikes.toString() + " </span>";
-                                content += "<p id=text>Available<br>Bikes</p></div>";
-                                content += "<div id=col2><span class=avail_stands>" + available_stands.toString() + "</span>";
-                                content += "<p id=text>Free<br>Stands</p></div></div>";
-                                
-                                content += "<div id=imagediv><img src=https://salonproff.ie/wp-content/uploads/2017/05/visa-logo-png-image-4.png>"
-                                content += "<img src='/static/mastercard.png'>";
-                                if (banking_marker == "True"){
-                                content += "<img src='/static/banking.png'>";
-                                } else if (banking_marker == "False") {
-                                    content += "<img src='/static/nobanking.png'>";
-                                }
-                                // content += "<p>Banking" + banking + "</p>";
-                                infowindow.setContent(content);
-                            })
+
+                                    // content += "<p style=color:green> Status: " + status + "</p>"
+                                    content += "<div id=modal><div id=col1><span class=avail_bikes>" +
+                                        available_bikes.toString() + " </span>";
+                                    content += "<p id=text>Available<br>Bikes</p></div>";
+                                    content += "<div id=col2><span class=avail_stands>" +
+                                        available_stands.toString() + "</span>";
+                                    content += "<p id=text>Free<br>Stands</p></div></div>";
+
+                                    content +=
+                                        "<div id=imagediv><img src=https://salonproff.ie/wp-content/uploads/2017/05/visa-logo-png-image-4.png>"
+                                    content += "<img src='/static/mastercard.png'>";
+                                    if (banking_marker == "True") {
+                                        content += "<img src='/static/banking.png'>";
+                                    } else if (banking_marker == "False") {
+                                        content += "<img src='/static/nobanking.png'>";
+                                    }
+                                    // content += "<p>Banking" + banking + "</p>";
+                                    infowindow.setContent(content);
+                                })
                             infowindow.open(map, this);
                             dailyGraph(this.station_number, name);
                             hourlyGraph(this.station_number, name);
                         });
-        
                     }
-                    //console.log(bankingArray)                     
                 }
             }
             xmlhttp.open("GET", url, true);
             xmlhttp.send();
 
-            
             var map = new google.maps.Map(document.getElementById('map'), options);
-            
+            directionsRenderer.setMap(map);
         }
-         
-        </script>
 
-<!-------------------------- Dropdown Menu ------------------------------------------->
-        <script>
-            var xmlhttp1 = new XMLHttpRequest();
-            var url1 = "http://127.0.0.1:5000/stations";
-            var dropdownName = [];
-            var dropdownValue = [];
-            var defaultValue = "Select Station";
-            xmlhttp1.onreadystatechange = function () {
-                if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
-                    dropdownData = JSON.parse(xmlhttp1.responseText);
-                    for (var j = 0; j < dropdownData.length; j++) {
-                        dropdownName.push(dropdownData[j].name)
-                        dropdownValue.push(dropdownData[j].number)
-                    }
+        function calcRoute() {
+            // function calcRoute(currentLat, currentLong) {  
+            console.log(currentLocation);
+
+            var request = {
+                origin: {
+                    lat: currentLocation[0].lat,
+                    lng: currentLocation[0].long
+
+                },
+
+                destination: {
+                    // lat: currentLocation[25],
+                    // lng: currentLocation[26]                    
+
+                    lng: currentLocation.pop(),
+                    lat: currentLocation.pop()
+                },
+                travelMode: 'WALKING'
+            };
+            directionsService.route(request, function (result, status) {
+                if (status == 'OK') {
+                    directionsRenderer.setDirections(result);
                 }
-            dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
-            for (var i = 0; i < dropdownName.length; i++){
-            dropDownMenu += "<option value=" + dropdownValue[i] + ">" +  dropdownName[i]  + "</option>";
+            });
+        }
+    </script>
+
+    <!-------------------------- Dropdown Menu ------------------------------------------->
+    <script>
+        var xmlhttp1 = new XMLHttpRequest();
+        var url1 = "http://127.0.0.1:5000/stations";
+        var dropdownName = [];
+        var dropdownValue = [];
+        var defaultValue = "Select Station";
+        xmlhttp1.onreadystatechange = function () {
+            if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
+                dropdownData = JSON.parse(xmlhttp1.responseText);
+                for (var j = 0; j < dropdownData.length; j++) {
+                    dropdownName.push(dropdownData[j].name)
+                    dropdownValue.push(dropdownData[j].number)
                 }
-                document.getElementById("stations").innerHTML = dropDownMenu;
             }
+
+            dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
+            for (var i = 0; i < dropdownName.length; i++) {
+                dropDownMenu += "<option value=" + dropdownValue[i] + ">" + dropdownName[i] + "</option>";
+
             xmlhttp1.open("GET", url1, true);
             xmlhttp1.send();
             
@@ -213,26 +277,70 @@
                     status = info[0].status;
                     bikeInfo.innerHTML += "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p>"
                     })
+
             }
-        </script>
+            document.getElementById("stations").innerHTML = dropDownMenu;
+        }
+        xmlhttp1.open("GET", url1, true);
+        xmlhttp1.send();
+    </script>
 
-<!-------------------------- Current Weather ------------------------------------------->
-        <script>
-            var weather;
-            var weatherDisplay = "";
+    <!--------------------------- DropDown Display ----------------------------------------->
 
-            $.getJSON("/weather", null, function(weather){
+    <script>
+        var sel = document.getElementById("stations");
+        sel.addEventListener("change", myFunction);
 
+        function myFunction() {
+            var bikeInfo = document.getElementById("nearestInfo");
+            bikeInfo.innerHTML = "";
+            value = sel.value;
+            dailyGraph(value);
+            $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
+                available_bikes = info[0].available_bikes;
+                available_stands = info[0].available_bike_stands;
+                status = info[0].status;
+                bikeInfo.innerHTML += "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes
+                    .toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p>"
+            })
+        }
+    </script>
+
+    <!-------------------------- Current Weather ------------------------------------------->
+    <script>
+        var weather;
+        var weatherDisplay = "";
+        var statusDisplay = "";
+
+        $.getJSON("/weather", null, function (weather) {
+
+            function showTime() {
                 var today = new Date();
-                var time = today.getHours() + ":" + today.getMinutes();  
-                console.log(time);
-                
-                weatherDisplay += "<p>" + weather[0].date + ' ' + time + "</p>"
+                // var time = today.getHours() + ":" + today.getMinutes();  
 
-                // iconList = ['rain', 'partly-cloudy-day', 'cloudy','wind','partly-cloudy-night',
-                // 'clear-night','clear-day'];
+                var h = today.getHours();
+                var m = today.getMinutes();
+                var s = today.getSeconds();
 
-                var iconDict =  [{ 
+                h = (h < 10) ? "0" + h : h;
+                m = (m < 10) ? "0" + m : m;
+                s = (s < 10) ? "0" + s : s;
+
+                var time = h + ":" + m + ":" + s;
+                // weatherDisplay += time;
+                document.getElementById('timeDiv').innerText = time;
+
+                setTimeout(showTime, 1000);
+
+
+            }
+            showTime();
+
+
+            // weatherDisplay += "<p>" + weather[0].date + ' ' + today.getHours() + "</p>"
+
+
+            var iconDict = [{
                     icon: 'rain',
                     image: "<img div id='iconIMG' src='/static/images/rain.png'"
                 },
@@ -260,51 +368,40 @@
                     icon: 'clear-day',
                     image: "<img div id='iconIMG' src='/static/images/clearday.png'"
                 }
-                ];                                                
+            ];
 
-                for (var c = 0; c < iconDict.length; c ++){
-                    console.log(iconDict[c].icon);
-                    if (iconDict[c].icon == weather[0].icon){
-                        console.log("HIT");
-                        
-                        weatherDisplay += iconDict[c].image;                    
-                    }
+            for (var c = 0; c < iconDict.length; c++) {
+                // console.log(iconDict[c].icon);
+                if (iconDict[c].icon == weather[0].icon) {
+                    statusDisplay += "<p id=stat>" + iconDict[c].image + weather[0].temp + "</p>";
                 }
-                weatherDisplay += "<p> Status: " + weather[0].status + "</p>"
-                weatherDisplay += "<p> Icon: " + weather[0].icon + "</p>"
-                weatherDisplay += "<p> Rain Probability: " + weather[0].rainProb + "</p>"
-                weatherDisplay += "<p>Rain Intensity: " + weather[0].rainIntensity + "</p>"
-                // weatherDisplay += "<p>Rain Type: " + weather[0].rainType + "</p>"
-                weatherDisplay += "<p>Temperature: " + weather[0].temp + "</p>"
-                weatherDisplay += "<p>Wind Speed: " + weather[0].windSpeed + "</p>"
-                document.getElementById("weatherInfo").innerHTML = weatherDisplay;
+            }
+            statusDisplay += "<p id=stat>" + weather[0].temp + " &#8451</p>"
 
-            })
-            
-        </script>
-        <script>
-        var currentLocation = [];
+            document.getElementById("statusdiv").innerHTML = statusDisplay;
 
-        function success(pos) {
-            crd = pos.coords;
-            console.log(pos.coords);
-            currentLocation.push({
-                lat: pos.coords.latitude,
-                long: pos.coords.longitude
-            });
-        }
-        
-        navigator.geolocation.getCurrentPosition(success);
 
+            weatherDisplay += "<p>" + '' + "</p>"
+            weatherDisplay += "<p> Status: " + weather[0].status + "</p>"
+            // weatherDisplay += "<p> Icon: " + weather[0].icon + "</p>"
+            weatherDisplay += "<p> Chance of rain: " + weather[0].rainProb + "%</p>"
+            // weatherDisplay += "<p>Rain Intensity: " + weather[0].rainIntensity + "</p>"
+            // weatherDisplay += "<p>Rain Type: " + weather[0].rainType + "</p>"
+            // weatherDisplay += "<p>Temperature: " + weather[0].temp + "</p>"
+            weatherDisplay += "<p>Wind Speed: " + weather[0].windSpeed + "</p>"
+            document.getElementById("weatherInfo").innerHTML = weatherDisplay;
+
+        })
     </script>
 
-<!-------------------------- GeoLocation ------------------------------------------->
+    <!-------------------------- GeoLocation ------------------------------------------->
 
     <script>
         var long = [];
         var lat = [];
         var dict = [];
         var distanceArray = [];
+
 
 
         function coordinates() {
@@ -320,33 +417,72 @@
                             currentLat = currentLocation[0].lat,
                             currentLong = currentLocation[0].long
 
-                        distance = Math.sqrt((Math.pow((currentLong - coorddata[j].longitude), 2)) + (Math.pow((
-                             currentLat - coorddata[j].latitude), 2)));
+                        // currentLat = 53.347122;
+                        // currentLong = -6.260975;
+
+                        distance = distancepoints(currentLat, currentLong, coorddata[j].latitude, coorddata[j]
+                            .longitude);
 
                         distanceArray.push({
                             name: key,
-                            dist: distance
+                            dist: distance / 1000
                         });
-
                     }
                     var newDist;
 
-                    distance1 = Math.sqrt((Math.pow((currentLong - coorddata[0].longitude), 2)) + (Math.pow((
-                        currentLat - coorddata[0].latitude), 2)));
+                    function degreesToRadians(degrees) {
+                        return degrees * Math.PI / 180;
+                    }
+
+                    function distancepoints(lat1, lng1, lat2, lng2) {
+
+
+                        var R = 6378137;
+                        let dLat = degreesToRadians(currentLat - lat2);
+                        let dLong = degreesToRadians(currentLong - lng2);
+                        let a = Math.sin(dLat / 2) *
+                            Math.sin(dLat / 2) +
+                            Math.cos(degreesToRadians(lat1)) *
+                            Math.cos(degreesToRadians(lat1)) *
+                            Math.sin(dLong / 2) *
+                            Math.sin(dLong / 2);
+
+                        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        let distance = R * c;
+                        return distance / 1000;
+                    }
+
+
+                    distance1 = distancepoints(currentLat, currentLong, coorddata[0].latitude, coorddata[0]
+                        .longitude);
 
                     for (var r = 0; r < coorddata.length; r++) {
-                        distance2 = Math.sqrt((Math.pow((currentLong - coorddata[r].longitude), 2)) + (Math.pow((
-                            currentLat - coorddata[r].latitude), 2)));
-                         if (distance2 < distance1) {
-                            var newDist = distance2
+                        distance2 = distancepoints(currentLat, currentLong, coorddata[r].latitude, coorddata[r]
+                            .longitude);
+                        if (distance2 < distance1) {
+                            newDist = distance2.toFixed(2);
                             var distance1 = distance2
                             var name = coorddata[r].name
+                            directionLat = coorddata[r].latitude
+                            directionLong = coorddata[r].longitude
+                            currentLocation.push(directionLat)
+                            currentLocation.push(directionLong)
                         }
                     }
-                        nearest = "<p>Nearest Station is " + name +"</p>";
-                        nearest += "<p> It is " + newDist + " away.</p>";
+
+                    nearest = "<p>Nearest Station:" + " <button onclick='calcRoute()' >Directions</button></p>";
+                    // nearest += "<p>" + name + ": " + newDist + " km away</p>";
+                    if (newDist < 1) {
+                        // Need metres not km.
+                        console.log("Less than 1 km");
+                        nearest += "<p>" + name + ": " + newDist * 1000 + " meters away.</p>";
+                    } else {
+                        nearest += "<p>" + name + ": " + newDist + " km away</p>";
+                    }
+
                     
-                    document.getElementById("nearestInfo").innerHTML = nearest; 
+
+                    document.getElementById("nearestInfo").innerHTML = nearest;
 
                 }
 
@@ -358,8 +494,9 @@
         coordinates();
     </script>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSEIwAGX4ZvK2nEsFYMf1xjalFmwQcGCM&callback=initMap">
     </script>
-    </body>
+</body>
 
 </html>

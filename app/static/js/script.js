@@ -42,7 +42,7 @@ function dailyGraph(station, name){
           }
         };
 
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.LineChart(document.getElementById('dataAnalytics'));
 
         chart.draw(data, options);
       }
