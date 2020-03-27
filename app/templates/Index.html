@@ -41,6 +41,7 @@
         
         <div id="dataAnalytics">
             <div id="chart_div" class="chart"></div>
+            <div id="hourly_div" class="chart"></div>
         </div>
 
 <!--------------------------Google Map------------------------------------------->
@@ -77,6 +78,9 @@
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     data = JSON.parse(xmlhttp.response);
+
+                    console.log(data)
+                    console.log(data.length)
                     // console.log(data)
                     for (var j = 0; j < data.length; j++) {
                         latitudeArray.push(data[j].latitude)
@@ -146,7 +150,8 @@
                                 infowindow.setContent(content);
                             })
                             infowindow.open(map, this);
-                            dailyGraph(this.station_number);
+                            dailyGraph(this.station_number, name);
+                            hourlyGraph(this.station_number, name);
                         });
         
                     }
@@ -199,7 +204,9 @@
                 var bikeInfo = document.getElementById("nearestInfo");
                 bikeInfo.innerHTML = "";
                 value = sel.value;
-                dailyGraph(value);
+                selectStation = $( "#stations option:selected" ).text();
+                dailyGraph(value, selectStation);
+                hourlyGraph(value, selectStation);
                 $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function(info){
                     available_bikes = info[0].available_bikes;
                     available_stands = info[0].available_bike_stands;
