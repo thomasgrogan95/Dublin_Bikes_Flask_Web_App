@@ -56,6 +56,7 @@
 
     <div id="dataAnalytics">
         <div id="chart_div" class="chart"></div>
+        <div id="hourly_div" class="chart"></div>
     </div>
 
     <!--------------------------Google Map------------------------------------------->
@@ -183,6 +184,7 @@
                                 })
                             infowindow.open(map, this);
                             dailyGraph(this.station_number);
+                            hourlyGraph(this.station_number,name);
                         });
                     }
                 }
