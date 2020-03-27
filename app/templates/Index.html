@@ -48,15 +48,8 @@
 
         </div>
 
-
         <div id="weatherInfo">
             <canvas id="icon1" width="128" height="128"></canvas>
-
-        
-        <div id="dataAnalytics">
-            <div id="chart_div" class="chart"></div>
-            <div id="hourly_div" class="chart"></div>
-
         </div>
 
     </div>
@@ -105,9 +98,6 @@
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     data = JSON.parse(xmlhttp.response);
-
-                    console.log(data)
-                    console.log(data.length)
                     // console.log(data)
                     for (var j = 0; j < data.length; j++) {
                         latitudeArray.push(data[j].latitude)
@@ -192,8 +182,7 @@
                                     infowindow.setContent(content);
                                 })
                             infowindow.open(map, this);
-                            dailyGraph(this.station_number, name);
-                            hourlyGraph(this.station_number, name);
+                            dailyGraph(this.station_number);
                         });
                     }
                 }
@@ -248,36 +237,9 @@
                     dropdownValue.push(dropdownData[j].number)
                 }
             }
-
             dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
             for (var i = 0; i < dropdownName.length; i++) {
                 dropDownMenu += "<option value=" + dropdownValue[i] + ">" + dropdownName[i] + "</option>";
-
-            xmlhttp1.open("GET", url1, true);
-            xmlhttp1.send();
-            
-        </script>
-
-<!--------------------------- DropDown Display ----------------------------------------->
-
-        <script>
-            var sel = document.getElementById("stations");
-            sel.addEventListener("change", myFunction);
-
-            function myFunction() {
-                var bikeInfo = document.getElementById("nearestInfo");
-                bikeInfo.innerHTML = "";
-                value = sel.value;
-                selectStation = $( "#stations option:selected" ).text();
-                dailyGraph(value, selectStation);
-                hourlyGraph(value, selectStation);
-                $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function(info){
-                    available_bikes = info[0].available_bikes;
-                    available_stands = info[0].available_bike_stands;
-                    status = info[0].status;
-                    bikeInfo.innerHTML += "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes.toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p>"
-                    })
-
             }
             document.getElementById("stations").innerHTML = dropDownMenu;
         }
