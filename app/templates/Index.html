@@ -195,6 +195,9 @@
 
             var map = new google.maps.Map(document.getElementById('map'), options);
             directionsRenderer.setMap(map);
+            // var bikeLayer = new google.maps.BicyclingLayer();
+            // bikeLayer.setMap(map)
+            directionsRenderer.setMap(map);
         }
 
         function calcRoute() {
@@ -266,11 +269,12 @@
             $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
                 available_bikes = info[0].available_bikes;
                 available_stands = info[0].available_bike_stands;
-                status = info[0].status;
+                status = info[0].status;                
+                bikeInfo.innerHTML += "<p><button onclick='dropDownRoute()' >Directions</button></p>";
                 bikeInfo.innerHTML += "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes
                     .toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p>"
             })
-        }
+        }      
     </script>
 
     <!-------------------------- Current Weather ------------------------------------------->
@@ -436,7 +440,7 @@
                             currentLocation.push(directionLong)
                         }
                     }
-
+                    
                     nearest = "<p>Nearest Station:" + " <button onclick='calcRoute()' >Directions</button></p>";
                     // nearest += "<p>" + name + ": " + newDist + " km away</p>";
                     if (newDist < 1) {
