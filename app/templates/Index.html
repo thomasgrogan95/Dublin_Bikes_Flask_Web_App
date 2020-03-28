@@ -184,7 +184,7 @@
                                     infowindow.setContent(content);
                                 })
                             infowindow.open(map, this);
-                            dailyGraph(this.station_number);
+                            dailyGraph(this.station_number, name);
                             hourlyGraph(this.station_number,name);
                         });
                     }
@@ -216,27 +216,6 @@
                     lat: currentLocation.pop()
                 },
                 travelMode: 'WALKING'
-            };
-            directionsService.route(request, function (result, status) {
-                if (status == 'OK') {
-                    directionsRenderer.setDirections(result);
-                }
-            });
-        }
-
-
-        function calcRouteDropdown() {
-            var request = {
-                origin: {
-                    lat: currentLocation[0].lat,
-                    lng: curr
-                },
-
-                destination: {
-                    lat: 53,
-                    lng: -6
-                },
-                travelMode: "WALKING"
             };
             directionsService.route(request, function (result, status) {
                 if (status == 'OK') {
@@ -276,17 +255,14 @@
     <script>
         var sel = document.getElementById("stations");
         sel.addEventListener("change", myFunction);
-        
 
         function myFunction() {
             var bikeInfo = document.getElementById("nearestInfo");
             bikeInfo.innerHTML = "";
             value = sel.value;
-
-            bikeInfo.innerHTML += "<p>" + "</p>";
-            bikeInfo.innerHTML +=  "<button onclick='calcRouteDropdown()' >Directions</button>";
-            
-            dailyGraph(value);
+            selectStation = $( "#stations option:selected" ).text();
+            dailyGraph(value, selectStation);
+            hourlyGraph(value, selectStation);
             $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
                 available_bikes = info[0].available_bikes;
                 available_stands = info[0].available_bike_stands;
