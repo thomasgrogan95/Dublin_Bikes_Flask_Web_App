@@ -115,3 +115,34 @@ function hourlyGraph(station, name){
   }) 
 
 } 
+
+
+function dropDownRoute(){  
+  $.getJSON("http://127.0.0.1:5000/stations" , null, function(coordinates){
+      for(var t = 0; t < coordinates.length; t++){
+        if ( coordinates[t].number == value){
+          console.log(coordinates[t].number);
+          selectedLat = coordinates[t].latitude;
+          selectedLong = coordinates[t].longitude  
+        } 
+      }   
+  })
+      var request = {
+        origin: {
+          lat: currentLocation[0].lat,
+          lng: currentLocation[0].long
+        },
+
+        destination: {
+          lat: selectedLat,
+          lng: selectedLong
+        },
+        travelMode: 'WALKING'
+      };
+      directionsService.route(request, function (result, status) {
+        if (status == 'OK') {
+            directionsRenderer.setDirections(result);
+        }
+    });
+
+}

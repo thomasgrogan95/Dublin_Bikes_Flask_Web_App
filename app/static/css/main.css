@@ -125,7 +125,10 @@ img {
 #imagediv {
     float: right;
 }
-
+/* 
+.name {
+    color: black;
+} */
 
 #chart_div {
     width: 50vw;
@@ -165,7 +168,7 @@ img {
     color: white;
     width: 100%;
     font-family: Orbitron;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
     font-size: 20px;
 }
 
