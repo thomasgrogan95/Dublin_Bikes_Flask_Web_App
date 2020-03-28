@@ -186,6 +186,9 @@
                             infowindow.open(map, this);
                             dailyGraph(this.station_number, name);
                             hourlyGraph(this.station_number,name);
+                            var loader = "<p><img src='/static/images/Infinity-1s-200px.gif' class='loader'></p>"
+                            document.getElementById('chart_div').innerHTML = loader;
+                            document.getElementById('hourly_div').innerHTML = loader;
                         });
                     }
                 }
@@ -266,6 +269,9 @@
             selectStation = $( "#stations option:selected" ).text();
             dailyGraph(value, selectStation);
             hourlyGraph(value, selectStation);
+            var loader = "<p><img src='/static/images/Infinity-1s-200px.gif' class='loader'></p>"
+            document.getElementById('chart_div').innerHTML = loader;
+            document.getElementById('hourly_div').innerHTML = loader;
             $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
                 available_bikes = info[0].available_bikes;
                 available_stands = info[0].available_bike_stands;
