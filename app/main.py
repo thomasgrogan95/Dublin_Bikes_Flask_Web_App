@@ -58,7 +58,7 @@ def getWeather():
     engine = connectDB()
     weather = []
     conn = engine.connect()
-    rows = conn.execute("SELECT * FROM DynamicData.weatherData order by DATE desc LIMIT 1;")
+    rows = conn.execute("SELECT * FROM DynamicData.weatherData order by DATE desc, time desc limit 1 ;")
     for row in rows:
         weather.append(dict(row))
     return jsonify(weather)
