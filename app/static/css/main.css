@@ -125,7 +125,10 @@ img {
 #imagediv {
     float: right;
 }
-
+/* 
+.name {
+    color: black;
+} */
 
 #chart_div {
     width: 50vw;
