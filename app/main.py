@@ -1,10 +1,12 @@
 from flask import Flask, render_template, g, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
+from sqlalchemy.pool import NullPool
 import pymysql
 import urllib.request
 import simplejson
 import json
+import pickle
 
 app = Flask(__name__)
 
@@ -14,7 +16,7 @@ def connectDB():
     
     try:
         # http://docs.sqlalchemy.org/en/latest/core/engines.html
-        engine = create_engine("mysql+pymysql://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData", echo=True)
+        engine = create_engine("mysql+pymysql://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData", echo=True, poolclass=NullPool)
         return engine
 
     except Exception as e:
@@ -38,6 +40,7 @@ def get_stations():
     rows = conn.execute("SELECT * from StaticData order by number;")
     for row in rows:
         stations.append(dict(row))
+    conn.close()
     return jsonify(stations)
 
 @app.route("/occupancy")
@@ -51,6 +54,7 @@ def get_occupancy():
     data = conn.execute(sql)
     for row in data:
         occupancyData.append(dict(row))
+    conn.close()
     return jsonify(occupancyData)
 
 @app.route("/weather")
@@ -61,6 +65,7 @@ def getWeather():
     rows = conn.execute("SELECT * FROM DynamicData.weatherData order by DATE desc, time desc limit 1 ;")
     for row in rows:
         weather.append(dict(row))
+    conn.close()
     return jsonify(weather)
 
 
@@ -73,6 +78,7 @@ def get_dynamic_data(station_id):
     rows = conn.execute(sql)
     for row in rows:
         stationData.append(dict(row))
+    conn.close()
     return jsonify(stationData)
 
 
@@ -87,6 +93,7 @@ def get_day_data(station):
         dailydata = conn.execute(sql)
         for row in dailydata:
             daily.append(dict(row))
+    conn.close()
     return jsonify(daily)
 
 
@@ -101,6 +108,7 @@ def get_hourly_data(station, day):
         hourlydata = conn.execute(sql)
         for row in hourlydata:
             hourly.append(dict(row))
+    conn.close()
     return jsonify(hourly)
 
 
