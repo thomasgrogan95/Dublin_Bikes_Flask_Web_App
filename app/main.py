@@ -17,7 +17,7 @@ def connectDB():
     
     try:
         # http://docs.sqlalchemy.org/en/latest/core/engines.html
-        engine = create_engine("mysql+pymysql://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData", echo=True, poolclass=NullPool)
+        engine = create_engine("mysql+pymysql://thomasgrogan95:password@dynamicdatadb.cmcflugmwazg.us-east-1.rds.amazonaws.com:3306/DynamicData", echo=True)
         return engine
 
     except Exception as e:
@@ -25,6 +25,7 @@ def connectDB():
         print("Error:", type(e))
         print(e)
 
+engine = connectDB()
 
 @app.route("/")
 def home():
@@ -35,7 +36,7 @@ def home():
 
 @app.route("/stations")
 def get_stations():
-    engine = connectDB()
+    #engine = connectDB()
     stations = []
     conn=engine.connect()
     rows = conn.execute("SELECT * from StaticData order by number;")
@@ -46,7 +47,7 @@ def get_stations():
 
 @app.route("/occupancy")
 def get_occupancy():
-    engine = connectDB()
+    #engine = connectDB()
     occupancyData = []
     conn = engine.connect()
     sql = """SELECT distinct number, available_bikes, available_bike_stands, total_stands, name, latitude, longitude, banking, last_update FROM (
@@ -60,7 +61,7 @@ def get_occupancy():
 
 @app.route("/weather")
 def getWeather():
-    engine = connectDB()
+    #engine = connectDB()
     weather = []
     conn = engine.connect()
     rows = conn.execute("SELECT * FROM DynamicData.weatherData order by DATE desc, time desc limit 1 ;")
@@ -72,7 +73,7 @@ def getWeather():
 
 @app.route("/dynamicData/<station_id>")
 def get_dynamic_data(station_id):
-    engine = connectDB()
+    #engine = connectDB()
     stationData = []
     conn=engine.connect()
     sql = "SELECT * FROM DynamicData where number = " + station_id + " order by last_update DESC limit 1;"
@@ -85,7 +86,7 @@ def get_dynamic_data(station_id):
 
 @app.route("/dailyData/<station>")
 def get_day_data(station):
-    engine = connectDB()
+    #engine = connectDB()
     daily = []
     conn = engine.connect()
 
@@ -100,7 +101,7 @@ def get_day_data(station):
 
 @app.route("/hourlyData/<station>/<day>")
 def get_hourly_data(station, day):
-    engine = connectDB()
+    #engine = connectDB()
     hourly = []
     conn = engine.connect()
 
@@ -116,7 +117,7 @@ def get_hourly_data(station, day):
 @app.route("/predict/<station>/<day>/<hour>/<totalStands>")
 def prediction(station, day, hour, totalStands):
 
-    def setEntryValues(df, dict):
+    def setValues(df, dict):
         df['number'][0] = dict['number']
         df['total_stands'][0] = dict['total_stands']
         df['day_' + dict['day']][0] = 1
@@ -149,11 +150,10 @@ def prediction(station, day, hour, totalStands):
 
     X = initDF()
 
-    setEntryValues(X, inputs)
+    setValues(X, inputs)
 
     model = pickle.load(open('app/static/models/model.pkl','rb'))
     prediction = model.predict(X)
-    print(prediction)
 
     return jsonify(availability=int(round(prediction[0])))
 
