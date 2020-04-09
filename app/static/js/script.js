@@ -5,9 +5,6 @@ function dailyGraph(station, name){
     var day = d.getDay();
 
     $.getJSON("http://127.0.0.1:5000/dailyData/" + selectedStation, null, function(daily){
-    //console.log(day);
-    //console.log(selectedStation);
-    //console.log(daily)
 
     google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -38,7 +35,7 @@ function dailyGraph(station, name){
               titleTextStyle: {color: 'white'},
               textStyle:{color: 'white'}
             },
-          //curveType: 'function',
+          
           legend: 'none',
           backgroundColor: "rgb(85, 96, 112)",
           colors: ['red'],
@@ -65,10 +62,6 @@ function hourlyGraph(station, name){
   var day = d.getDay();
 
   $.getJSON("http://127.0.0.1:5000/hourlyData/" + selectedStation + "/" + day, null, function(hourly){
-
-  //console.log(selectedStation);
-  //console.log(day)
-  //console.log(hourly)
 
   google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -112,7 +105,7 @@ function hourlyGraph(station, name){
             titleTextStyle: {color: 'white'},
             textStyle:{color: 'white'}
           },
-        //curveType: 'function',
+        
         legend: 'none',
         backgroundColor: "rgb(85, 96, 112)",
         colors: ['red'],

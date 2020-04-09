@@ -12,6 +12,7 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://cdn.klokantech.com/maptilerlayer/v1/index.js"></script>
 
+
 </head>
 
 
@@ -30,6 +31,38 @@
         <!-- Div for dropdown menu -->
         <div id="drop">
             <select id="stations" name="Select Station"></select>
+            <select id="day">
+                <option value="0">Monday</option>
+                <option value="1">Tuesday</option>
+                <option value="2">Wednesday</option>
+                <option value="3">Thursday</option>
+                <option value="4">Friday</option>
+                <option value="5">Saturday</option>
+                <option value="6">Sunday</option>
+            </select>
+            <select id="time">
+                <option value="5">05:00</option>
+                <option value="6">06:00</option>
+                <option value="7">07:00</option>
+                <option value="8">08:00</option>
+                <option value="9">09:00</option>
+                <option value="10">10:00</option>
+                <option value="11">11:00</option>
+                <option value="12">12:00</option>
+                <option value="13">13:00</option>
+                <option value="14">14:00</option>
+                <option value="15">15:00</option>
+                <option value="16">16:00</option>
+                <option value="17">17:00</option>
+                <option value="18">18:00</option>
+                <option value="19">19:00</option>
+                <option value="20">20:00</option>
+                <option value="21">21:00</option>
+                <option value="22">22:00</option>
+                <option value="23">23:00</option>
+                
+            </select>
+            <button class="predictButton" type="submit">Predict Availability</button>
         </div>
 
         <div id="dropStationInfo">
@@ -61,6 +94,7 @@
     </div>
 
     <!--------------------------Google Map------------------------------------------->
+    
     <script>
         currentLocation = [];
 
@@ -237,6 +271,7 @@
         var url1 = "http://127.0.0.1:5000/stations";
         var dropdownName = [];
         var dropdownValue = [];
+        var totalStands = [];
         var defaultValue = "Select Station";
         xmlhttp1.onreadystatechange = function () {
             if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
@@ -244,16 +279,43 @@
                 for (var j = 0; j < dropdownData.length; j++) {
                     dropdownName.push(dropdownData[j].name)
                     dropdownValue.push(dropdownData[j].number)
+                    totalStands.push(dropdownData[j].total_stands)
                 }
             }
             dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
             for (var i = 0; i < dropdownName.length; i++) {
-                dropDownMenu += "<option value=" + dropdownValue[i] + ">" + dropdownName[i] + "</option>";
+                dropDownMenu += "<option value=" + dropdownValue[i] + " id="+ totalStands[i] +">" + dropdownName[i] + "</option>";
             }
             document.getElementById("stations").innerHTML = dropDownMenu;
         }
         xmlhttp1.open("GET", url1, true);
         xmlhttp1.send();
+    </script>
+
+    <!--------------------------- Prediction ----------------------------------------->
+
+    <script>
+        $( ".predictButton" ).click(function() {
+            
+            var daySelect = document.getElementById("day");
+            var day = daySelect.value;
+            var hourSelect = document.getElementById("time");
+            var hour = hourSelect.value;
+            var stationSelect = document.getElementById("stations");
+            var station = stationSelect.value;
+            var totalstands = stationSelect.options[stationSelect.selectedIndex].id;
+            
+            console.log(station, day, hour, totalstands )
+            $.getJSON("http://127.0.0.1:5000/predict/"+station+"/"+day+"/"+hour+"/"+totalstands, null, function (prediction) {
+                  console.log(prediction);
+                  var predictionInfo = document.getElementById("dropStationInfo");
+                  var bikes = "bikes";
+                  if (prediction.availability == 1){
+                      bikes = "bike";
+                  }
+                  predictionInfo.innerHTML = "<p>" +daySelect.options[daySelect.selectedIndex].text + " at " + hourSelect.options[hourSelect.selectedIndex].text +" --- " + prediction.availability + " "+  bikes +"</p>"
+                })
+        });
     </script>
 
     <!--------------------------- DropDown Display ----------------------------------------->
@@ -263,6 +325,8 @@
         sel.addEventListener("change", myFunction);
 
         function myFunction() {
+            var predictionInfo = document.getElementById("dropStationInfo");
+            predictionInfo.innerHTML = "";
             var bikeInfo = document.getElementById("nearestInfo");
             bikeInfo.innerHTML = "";
             value = sel.value;
@@ -272,13 +336,8 @@
             var loader = "<p><img src='/static/images/Infinity-1s-200px.gif' class='loader'></p>"
             document.getElementById('chart_div').innerHTML = loader;
             document.getElementById('hourly_div').innerHTML = loader;
-            $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
-                available_bikes = info[0].available_bikes;
-                available_stands = info[0].available_bike_stands;
-                status = info[0].status;                
+            $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {                
                 bikeInfo.innerHTML += "<p><button onclick='dropDownRoute()' >Directions</button></p>";
-                bikeInfo.innerHTML += "<p> Status: " + status + "</p><p> Available Bikes: " + available_bikes
-                    .toString() + " </p><p> Available Stands: " + available_stands.toString() + "</p>"
             })
         }      
     </script>
