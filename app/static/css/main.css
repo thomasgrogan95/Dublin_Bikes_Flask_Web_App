@@ -34,7 +34,7 @@ h1 {
 }
 
 #map {
-    height: 500px;
+    height: 550px;
     width: 75%;
     float: left;
 }
@@ -43,18 +43,20 @@ h1 {
 #information {
     float: left;
     position: relative;
-    width: 24%;
-    height: 500px;
+    width: 25%;
+    height: 550px;
     /* background-color: rgba(135, 197, 222); */
     background-color: rgb(34, 40, 49);
-    padding-left: 1%;
-
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    box-sizing: border-box;
 }
 
-/* #weatherInfo {
-    position: absolute;
-    bottom: 0;
-} */
+#weatherInfo {
+    padding-left: 10px;
+    /* padding-top: 20px;
+    padding-bottom: 20px; */
+}
 
 #dropStationInfo {
     background-color: rgb(135, 197, 222);
@@ -87,6 +89,7 @@ h1 {
     background-color: red;
     margin-left: 4%;
     text-align: center;
+    font-size: 20px;
 }
 
 .avail_stands {
@@ -167,9 +170,10 @@ img {
 #timeDiv {
     color: white;
     width: 100%;
-    font-family: Orbitron;
+    /* font-family: Orbitron; */
     margin-bottom: 5%;
     font-size: 20px;
+    padding-left: 10px;
 }
 
 #stat {
@@ -178,7 +182,6 @@ img {
     margin-right: 20px;
     font-size: 35px;
     font-weight: 10;
-    font-family: Orbitron;
 }
 
 #stationsdropdown {
@@ -200,6 +203,7 @@ button {
 
 #nearestInfo {
     padding-bottom: 20px;
+    padding-left: 10px;
 }
 
 .loader {
@@ -208,3 +212,15 @@ button {
     margin-left: 25%;
     margin-top: 15%;
 }
+
+
+#statusdiv {
+    border-bottom: 2px solid white;
+    padding-left: 10px;
+    padding-bottom: 20px ;
+}
+
+#timeDiv {
+    border-top: 2px solid white;
+    padding-top: 20px;
+}  
