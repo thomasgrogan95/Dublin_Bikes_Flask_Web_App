@@ -84,7 +84,7 @@
                 <option value="21">21:00</option>
                 <option value="22">22:00</option>
                 <option value="23">23:00</option>
-                
+
             </select>
             <button class="predictButton" type="submit">Predict Availability</button>
         </div>
@@ -122,8 +122,6 @@
 
 
     <script>
-
-
         $(function () {
             $('#switch').change(function () {
                 x = ($('#switch').prop('checked'));
@@ -635,7 +633,8 @@
             }
             dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
             for (var i = 0; i < dropdownName.length; i++) {
-                dropDownMenu += "<option value=" + dropdownValue[i] + " id="+ totalStands[i] +">" + dropdownName[i] + "</option>";
+                dropDownMenu += "<option value=" + dropdownValue[i] + " id=" + totalStands[i] + ">" + dropdownName[
+                    i] + "</option>";
             }
             document.getElementById("stations").innerHTML = dropDownMenu;
         }
@@ -646,8 +645,8 @@
     <!--------------------------- Prediction ----------------------------------------->
 
     <script>
-        $( ".predictButton" ).click(function() {
-            
+        $(".predictButton").click(function () {
+
             var daySelect = document.getElementById("day");
             var day = daySelect.value;
             var hourSelect = document.getElementById("time");
@@ -655,16 +654,20 @@
             var stationSelect = document.getElementById("stations");
             var station = stationSelect.value;
             var totalstands = stationSelect.options[stationSelect.selectedIndex].id;
-            
-            console.log(station, day, hour, totalstands )
-            $.getJSON("http://127.0.0.1:5000/predict/"+station+"/"+day+"/"+hour+"/"+totalstands, null, function (prediction) {
-                  console.log(prediction);
-                  var predictionInfo = document.getElementById("dropStationInfo");
-                  var bikes = "bikes";
-                  if (prediction.availability == 1){
-                      bikes = "bike";
-                  }
-                  predictionInfo.innerHTML = "<p>" +daySelect.options[daySelect.selectedIndex].text + " at " + hourSelect.options[hourSelect.selectedIndex].text +" --- " + prediction.availability + " "+  bikes +"</p>"
+
+            console.log(station, day, hour, totalstands)
+            $.getJSON("http://127.0.0.1:5000/predict/" + station + "/" + day + "/" + hour + "/" + totalstands,
+                null,
+                function (prediction) {
+                    console.log(prediction);
+                    var predictionInfo = document.getElementById("dropStationInfo");
+                    var bikes = "bikes";
+                    if (prediction.availability == 1) {
+                        bikes = "bike";
+                    }
+                    predictionInfo.innerHTML = "<p>" + daySelect.options[daySelect.selectedIndex].text +
+                        " at " + hourSelect.options[hourSelect.selectedIndex].text + " --- " + prediction
+                        .availability + " " + bikes + "</p>"
                 })
         });
     </script>
@@ -693,10 +696,13 @@
                 available_stands = info[0].available_bike_stands;
                 status = info[0].status;
 
-            $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {                
+                $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
 
-                bikeInfo.innerHTML += "<p><button onclick='dropDownRoute()' >Directions</button></p>";
+                    bikeInfo.innerHTML +=
+                        "<p><button onclick='dropDownRoute()' >Directions</button></p>";
+                })
             })
+
         }
     </script>
 
