@@ -5,9 +5,6 @@ function dailyGraph(station, name){
     var day = d.getDay();
 
     $.getJSON("http://127.0.0.1:5000/dailyData/" + selectedStation, null, function(daily){
-    //console.log(day);
-    console.log(selectedStation);
-    console.log(daily)
 
     google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -30,12 +27,20 @@ function dailyGraph(station, name){
           vAxis: {
               minValue: 0,
               title: "Average Number of Available Bikes",
+              textStyle:{color: 'white'},
+              titleTextStyle: {color: 'white'},
             },
           hAxis: {
               title: "Day",
+              titleTextStyle: {color: 'white'},
+              textStyle:{color: 'white'}
             },
-          //curveType: 'function',
+          
           legend: 'none',
+          backgroundColor: "rgb(85, 96, 112)",
+          colors: ['red'],
+          titleTextStyle: {color: 'white'},
+          lineWidth: 3,
           animation: {
             duration: 800,
             startup: true 
@@ -57,10 +62,6 @@ function hourlyGraph(station, name){
   var day = d.getDay();
 
   $.getJSON("http://127.0.0.1:5000/hourlyData/" + selectedStation + "/" + day, null, function(hourly){
-
-  console.log(selectedStation);
-  console.log(day)
-  console.log(hourly)
 
   google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -96,12 +97,20 @@ function hourlyGraph(station, name){
         vAxis: {
             minValue: 0,
             title: "Average Number of Available Bikes",
+            textStyle:{color: 'white'},
+            titleTextStyle: {color: 'white'},
           },
         hAxis: {
             title: "Time",
+            titleTextStyle: {color: 'white'},
+            textStyle:{color: 'white'}
           },
-        //curveType: 'function',
+        
         legend: 'none',
+        backgroundColor: "rgb(85, 96, 112)",
+        colors: ['red'],
+        titleTextStyle: {color: 'white'},
+        lineWidth: 3,
         animation: {
           duration: 800,
           startup: true 
