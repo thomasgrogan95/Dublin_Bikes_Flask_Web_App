@@ -54,6 +54,5 @@ def connectDB():
         print("Error3:", type(e))
         print(e)
     
-
 if __name__ == '__main__':
     connectDB()
