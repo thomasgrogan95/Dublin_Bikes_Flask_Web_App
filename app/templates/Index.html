@@ -5,7 +5,7 @@
     <title>
         {{ Title }}
     </title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"> -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Orbitron" />
     <script src="/static/js/script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -13,12 +13,36 @@
     <script src="https://cdn.klokantech.com/maptilerlayer/v1/index.js"></script>
 
 
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Orbitron" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+
+
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
 </head>
 
 
 <body>
     <div id="header">
-        <h1>Dublin Bikes</h1>
+        <h1>Dublin Bikes
+            <div id="dor">
+                <input type="checkbox" id="switch" !checked data-toggle="toggle" data-on='Dark Mode'
+                    data-off="Dark Mode" data-onstyle="success" data-offstyle="danger">
+
+                <input type="checkbox" id="switch1" !checked data-toggle="toggle" data-on='Bicycle Layer'
+                    data-off="Bicycle Layer" data-onstyle="success" data-offstyle="danger">
+            </div>
+        </h1>
+
+
     </div>
 
     <div id="map">
@@ -60,42 +84,235 @@
                 <option value="21">21:00</option>
                 <option value="22">22:00</option>
                 <option value="23">23:00</option>
-                
+
             </select>
             <button class="predictButton" type="submit">Predict Availability</button>
         </div>
 
+
         <div id="dropStationInfo">
         </div>
 
+
         <div id="nearestInfo">
             <button onclick="calcRoute()"></button>
-
         </div>
 
-        <!-- Div showing weather data -->
-       
+
         <div id="timeDiv" onload="showTime()">
             <canvas id="icon1" width="128" height="128"></canvas>
         </div>
-        <div id="statusdiv">
 
+
+        <div id="statusdiv">
         </div>
+
 
         <div id="weatherInfo">
             <canvas id="icon1" width="128" height="128"></canvas>
         </div>
-
     </div>
+
 
     <div id="dataAnalytics">
         <div id="chart_div" class="chart"></div>
         <div id="hourly_div" class="chart"></div>
     </div>
 
-    <!--------------------------Google Map------------------------------------------->
-    
+
+
     <script>
+        $(function () {
+            $('#switch').change(function () {
+                x = ($('#switch').prop('checked'));
+                y = ($('#switch1').prop('checked'));
+
+                if (x == true && y == false) {
+                    initMapDark()
+                }
+                if (y == true && x == false) {
+                    initMap()
+                    bikeLayer = new google.maps.BicyclingLayer();
+                    bikeLayer.setMap(map);
+                }
+
+                if (x == true && y == true) {
+                    initMapDark()
+                    bikeLayer1 = new google.maps.BicyclingLayer();
+                    bikeLayer1.setMap(map)
+                }
+
+                if (x == false && y == false) {
+                    initMap()
+                }
+            })
+
+            $('#switch1').change(function () {
+                x = ($('#switch').prop('checked'));
+                y = ($('#switch1').prop('checked'));
+
+
+                if (x == true && y == false) {
+                    initMapDark()
+                }
+                if (y == true && x == false) {
+                    initMap()
+                    bikeLayer2 = new google.maps.BicyclingLayer();
+                    bikeLayer2.setMap(map);
+                }
+
+                if (x == true && y == true) {
+                    initMapDark()
+                    bikeLayer3 = new google.maps.BicyclingLayer();
+                    bikeLayer3.setMap(map);
+
+
+                }
+                if (x == false && y == false) {
+                    initMap()
+                }
+
+            })
+        })
+    </script>
+
+    <!--------------------------Google Map------------------------------------------->
+
+    <script>
+        dark = [{
+                elementType: 'geometry',
+                stylers: [{
+                    color: '#242f3e'
+                }]
+            },
+            {
+                elementType: 'labels.text.stroke',
+                stylers: [{
+                    color: '#000000'
+                }]
+            },
+            {
+                elementType: 'labels.text.fill',
+                stylers: [{
+                    color: '#3d8580'
+                }]
+            },
+            {
+                featureType: 'administrative.locality',
+                elementType: 'labels.text.fill',
+                stylers: [{
+                    color: '#65b5c2'
+                }]
+            },
+            {
+                featureType: 'poi',
+                elementType: 'labels.text.fill',
+                stylers: [{
+                    color: '#00FFFFFF'
+                }]
+            },
+            {
+                featureType: 'poi.park',
+                elementType: 'geometry',
+                stylers: [{
+                    color: '#3e573c'
+                }]
+            },
+            {
+                featureType: 'poi.park',
+                elementType: 'labels.text.fill',
+                stylers: [{
+                    color: '#65a86b'
+                }]
+            },
+            {
+                featureType: 'road',
+                elementType: 'geometry',
+                stylers: [{
+                    color: '#4B545F'
+                }]
+            },
+            {
+                featureType: 'road',
+                elementType: 'geometry.stroke',
+                stylers: [{
+                    color: '#212a37'
+                }]
+            },
+            {
+                featureType: 'road',
+                elementType: 'labels.text.fill',
+                stylers: [{
+                    color: '#9BA0A6'
+                }]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'geometry',
+                stylers: [{
+                    color: '#ff9900'
+                }]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'geometry.stroke',
+                stylers: [{
+                    color: '#1f2835'
+                }]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'labels.text.fill',
+                stylers: [{
+                    color: '#f3d19c'
+                }]
+            },
+            {
+                featureType: "road.arterial",
+                elementType: "labels",
+                stylers: [{
+                    visibility: "off"
+                }]
+            },
+
+
+
+            {
+                featureType: 'transit',
+                elementType: 'geometry',
+                stylers: [{
+                    color: '#2f3948'
+                }]
+            },
+            {
+                featureType: 'transit.station',
+                elementType: 'labels.text.fill',
+                stylers: [{
+                    color: '#d59563'
+                }]
+            },
+            {
+                featureType: 'water',
+                elementType: 'geometry',
+                stylers: [{
+                    color: '#203361'
+                }]
+            },
+            {
+                featureType: 'water',
+                elementType: 'labels.text.fill',
+                stylers: [{
+                    color: '#515c6d'
+                }]
+            },
+            {
+                featureType: 'water',
+                elementType: 'labels.text.stroke',
+                stylers: [{
+                    color: '#ffffff'
+                }]
+            }
+        ]
         currentLocation = [];
 
         function success(pos) {
@@ -112,12 +329,12 @@
         function initMap() {
             directionsService = new google.maps.DirectionsService();
             directionsRenderer = new google.maps.DirectionsRenderer();
-            var options = {
+            options = {
                 zoom: 13,
                 center: {
                     lat: 53.347432,
                     lng: -6.269827
-                }
+                },
             }
 
             var xmlhttp = new XMLHttpRequest();
@@ -155,7 +372,6 @@
                             station_number: numberArray[j],
                             banking_marker: bankingArray[j],
                             available: (availableBikesArray[j] / totalStandsArray[j]),
-                            // icon: 'http://maps.google.com/mapfiles/kml/pal4/icon49.png'
                         })
 
                         var currentMarker = new google.maps.Marker({
@@ -163,6 +379,7 @@
                                 lat: currentLocation[0].lat,
                                 lng: currentLocation[0].long
                             },
+
                             map: map,
                             icon: 'http://maps.google.com/mapfiles/ms/micons/blue.png'
 
@@ -197,14 +414,14 @@
                                         content += "<p class=name>" + name + "</p>";
                                     }
 
-
-                                    // content += "<p style=color:green> Status: " + status + "</p>"
                                     content += "<div id=modal><div id=col1><span class=avail_bikes>" +
                                         available_bikes.toString() + " </span>";
-                                    content += "<p id=text>Available<br>Bikes</p></div>";
+                                    content +=
+                                        "<p id=text class=modaltext>Available<br>Bikes</p></div>";
                                     content += "<div id=col2><span class=avail_stands>" +
                                         available_stands.toString() + "</span>";
-                                    content += "<p id=text>Free<br>Stands</p></div></div>";
+                                    content +=
+                                        "<p id=text class=modaltext>Free<br>Stands</p></div></div>";
 
                                     content +=
                                         "<div id=imagediv><img src=https://salonproff.ie/wp-content/uploads/2017/05/visa-logo-png-image-4.png>"
@@ -214,13 +431,14 @@
                                     } else if (banking_marker == "False") {
                                         content += "<img src='/static/nobanking.png'>";
                                     }
-                                    // content += "<p>Banking" + banking + "</p>";
                                     infowindow.setContent(content);
                                 })
+
                             infowindow.open(map, this);
                             dailyGraph(this.station_number, name);
-                            hourlyGraph(this.station_number,name);
-                            var loader = "<p><img src='/static/images/Infinity-1s-200px.gif' class='loader'></p>"
+                            hourlyGraph(this.station_number, name);
+                            var loader =
+                                "<p><img src='/static/images/Infinity-1s-200px.gif' class='loader'></p>"
                             document.getElementById('chart_div').innerHTML = loader;
                             document.getElementById('hourly_div').innerHTML = loader;
                         });
@@ -230,12 +448,143 @@
             xmlhttp.open("GET", url, true);
             xmlhttp.send();
 
-            var map = new google.maps.Map(document.getElementById('map'), options);
-            directionsRenderer.setMap(map);
-            // var bikeLayer = new google.maps.BicyclingLayer();
-            // bikeLayer.setMap(map)
+            map = new google.maps.Map(document.getElementById('map'), options);
             directionsRenderer.setMap(map);
         }
+
+
+
+        function initMapDark() {
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+
+
+            optionsDark = {
+                zoom: 13,
+                center: {
+                    lat: 53.347432,
+                    lng: -6.269827
+                },
+                styles: dark
+            }
+
+            var xmlhttp = new XMLHttpRequest();
+            var url = "/occupancy";
+            var latitudeArray = [];
+            var longitudeArray = [];
+            var nameArray = [];
+            var numberArray = [];
+            var bankingArray = [];
+            var totalStandsArray = [];
+            var availableBikesArray = [];
+
+
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    data = JSON.parse(xmlhttp.response);
+                    // console.log(data)
+                    for (var j = 0; j < data.length; j++) {
+                        latitudeArray.push(data[j].latitude)
+                        longitudeArray.push(data[j].longitude)
+                        nameArray.push(data[j].name)
+                        numberArray.push(data[j].number)
+                        bankingArray.push(data[j].banking)
+                        totalStandsArray.push(data[j].total_stands)
+                        availableBikesArray.push(data[j].available_bikes)
+
+
+                        var marker = new google.maps.Marker({
+                            position: {
+                                lat: latitudeArray[j],
+                                lng: longitudeArray[j]
+                            },
+                            map: map,
+                            title: nameArray[j],
+                            station_number: numberArray[j],
+                            banking_marker: bankingArray[j],
+                            available: (availableBikesArray[j] / totalStandsArray[j]),
+                        })
+
+                        var currentMarker = new google.maps.Marker({
+                            position: {
+                                lat: currentLocation[0].lat,
+                                lng: currentLocation[0].long
+                            },
+
+                            map: map,
+                            icon: 'http://maps.google.com/mapfiles/ms/micons/blue.png'
+
+                        })
+
+                        if (marker.available >= 0.25) {
+                            marker.setIcon('http://maps.google.com/mapfiles/ms/micons/green-dot.png');
+                        } else if (marker.available > 0) {
+                            marker.setIcon('http://maps.google.com/mapfiles/ms/micons/orange-dot.png');
+                        } else {
+                            marker.setIcon('http://maps.google.com/mapfiles/ms/micons/red-dot.png');
+                        }
+
+                        marker.metadata = {
+                            type: "point",
+                            id: numberArray[j]
+                        };
+                        var infowindow = new google.maps.InfoWindow({});
+                        marker.addListener('click', function () {
+                            name = this.title;
+                            banking_marker = this.banking_marker;
+                            infowindow.setContent("");
+                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null,
+                                function (data) {
+                                    content = "";
+                                    available_bikes = data[0].available_bikes;
+                                    available_stands = data[0].available_bike_stands;
+                                    status = data[0].status;
+                                    if (status == "OPEN") {
+                                        content += "<p class=name>" + name + "</p>";
+                                    } else {
+                                        content += "<p class=name>" + name + "</p>";
+                                    }
+
+                                    content += "<div id=modal><div id=col1><span class=avail_bikes>" +
+                                        available_bikes.toString() + " </span>";
+                                    content +=
+                                        "<p id=text class=modaltext>Available<br>Bikes</p></div>";
+                                    content += "<div id=col2><span class=avail_stands>" +
+                                        available_stands.toString() + "</span>";
+                                    content +=
+                                        "<p id=text class=modaltext>Free<br>Stands</p></div></div>";
+
+                                    content +=
+                                        "<div id=imagediv><img src=https://salonproff.ie/wp-content/uploads/2017/05/visa-logo-png-image-4.png>"
+                                    content += "<img src='/static/mastercard.png'>";
+                                    if (banking_marker == "True") {
+                                        content += "<img src='/static/banking.png'>";
+                                    } else if (banking_marker == "False") {
+                                        content += "<img src='/static/nobanking.png'>";
+                                    }
+                                    infowindow.setContent(content);
+                                })
+
+                            infowindow.open(map, this);
+                            dailyGraph(this.station_number, name);
+                            hourlyGraph(this.station_number, name);
+                            var loader =
+                                "<p><img src='/static/images/Infinity-1s-200px.gif' class='loader'></p>"
+                            document.getElementById('chart_div').innerHTML = loader;
+                            document.getElementById('hourly_div').innerHTML = loader;
+                        });
+                    }
+                }
+            }
+            xmlhttp.open("GET", url, true);
+            xmlhttp.send();
+
+            map = new google.maps.Map(document.getElementById('map'), optionsDark);
+            directionsRenderer.setMap(map);
+        }
+
+
+
 
         function calcRoute() {
             // function calcRoute(currentLat, currentLong) {  
@@ -284,7 +633,8 @@
             }
             dropDownMenu = "<option selected disabled value=" + defaultValue + ">" + defaultValue + "</option>";
             for (var i = 0; i < dropdownName.length; i++) {
-                dropDownMenu += "<option value=" + dropdownValue[i] + " id="+ totalStands[i] +">" + dropdownName[i] + "</option>";
+                dropDownMenu += "<option value=" + dropdownValue[i] + " id=" + totalStands[i] + ">" + dropdownName[
+                    i] + "</option>";
             }
             document.getElementById("stations").innerHTML = dropDownMenu;
         }
@@ -295,8 +645,8 @@
     <!--------------------------- Prediction ----------------------------------------->
 
     <script>
-        $( ".predictButton" ).click(function() {
-            
+        $(".predictButton").click(function () {
+
             var daySelect = document.getElementById("day");
             var day = daySelect.value;
             var hourSelect = document.getElementById("time");
@@ -304,16 +654,20 @@
             var stationSelect = document.getElementById("stations");
             var station = stationSelect.value;
             var totalstands = stationSelect.options[stationSelect.selectedIndex].id;
-            
-            console.log(station, day, hour, totalstands )
-            $.getJSON("http://127.0.0.1:5000/predict/"+station+"/"+day+"/"+hour+"/"+totalstands, null, function (prediction) {
-                  console.log(prediction);
-                  var predictionInfo = document.getElementById("dropStationInfo");
-                  var bikes = "bikes";
-                  if (prediction.availability == 1){
-                      bikes = "bike";
-                  }
-                  predictionInfo.innerHTML = "<p>" +daySelect.options[daySelect.selectedIndex].text + " at " + hourSelect.options[hourSelect.selectedIndex].text +" --- " + prediction.availability + " "+  bikes +"</p>"
+
+            console.log(station, day, hour, totalstands)
+            $.getJSON("http://127.0.0.1:5000/predict/" + station + "/" + day + "/" + hour + "/" + totalstands,
+                null,
+                function (prediction) {
+                    console.log(prediction);
+                    var predictionInfo = document.getElementById("dropStationInfo");
+                    var bikes = "bikes";
+                    if (prediction.availability == 1) {
+                        bikes = "bike";
+                    }
+                    predictionInfo.innerHTML = "<p>" + daySelect.options[daySelect.selectedIndex].text +
+                        " at " + hourSelect.options[hourSelect.selectedIndex].text + " --- " + prediction
+                        .availability + " " + bikes + "</p>"
                 })
         });
     </script>
@@ -330,16 +684,26 @@
             var bikeInfo = document.getElementById("nearestInfo");
             bikeInfo.innerHTML = "";
             value = sel.value;
-            selectStation = $( "#stations option:selected" ).text();
+            selectStation = $("#stations option:selected").text();
             dailyGraph(value, selectStation);
             hourlyGraph(value, selectStation);
             var loader = "<p><img src='/static/images/Infinity-1s-200px.gif' class='loader'></p>"
             document.getElementById('chart_div').innerHTML = loader;
             document.getElementById('hourly_div').innerHTML = loader;
-            $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {                
-                bikeInfo.innerHTML += "<p><button onclick='dropDownRoute()' >Directions</button></p>";
+
+            $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
+                available_bikes = info[0].available_bikes;
+                available_stands = info[0].available_bike_stands;
+                status = info[0].status;
+
+                $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
+
+                    bikeInfo.innerHTML +=
+                        "<p><button onclick='dropDownRoute()' >Directions</button></p>";
+                })
             })
-        }      
+
+        }
     </script>
 
     <!-------------------------- Current Weather ------------------------------------------->
@@ -505,7 +869,7 @@
                             currentLocation.push(directionLong)
                         }
                     }
-                    
+
                     nearest = "<p>Nearest Station:" + " <button onclick='calcRoute()' >Directions</button></p>";
                     // nearest += "<p>" + name + ": " + newDist + " km away</p>";
                     if (newDist < 1) {
@@ -516,7 +880,7 @@
                         nearest += "<p>" + name + ": " + newDist + " km away</p>";
                     }
 
-                    
+
 
                     document.getElementById("nearestInfo").innerHTML = nearest;
 
