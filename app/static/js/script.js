@@ -4,7 +4,7 @@ function dailyGraph(station, name){
     var d = new Date();
     var day = d.getDay();
 
-    $.getJSON("http://127.0.0.1:5000/dailyData/" + selectedStation, null, function(daily){
+    $.getJSON("/dailyData/" + selectedStation, null, function(daily){
 
     google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
@@ -61,7 +61,7 @@ function hourlyGraph(station, name){
   var d = new Date();
   var day = d.getDay();
 
-  $.getJSON("http://127.0.0.1:5000/hourlyData/" + selectedStation + "/" + day, null, function(hourly){
+  $.getJSON("/hourlyData/" + selectedStation + "/" + day, null, function(hourly){
 
   google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -127,7 +127,7 @@ function hourlyGraph(station, name){
 
 
 function dropDownRoute(){  
-  $.getJSON("http://127.0.0.1:5000/stations" , null, function(coordinates){
+  $.getJSON("/stations" , null, function(coordinates){
       for(var t = 0; t < coordinates.length; t++){
         if ( coordinates[t].number == value){
           console.log(coordinates[t].number);

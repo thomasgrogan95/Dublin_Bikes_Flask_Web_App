@@ -313,16 +313,16 @@
                 }]
             }
         ]
-        currentLocation = [];
+        currentLocation = [{lat: 53.309089, long: -6.223930}];
 
-        function success(pos) {
-            currentLocation.push({
-                lat: pos.coords.latitude,
-                long: pos.coords.longitude
-            }, );
-        }
+        //function success(pos) {
+          //  currentLocation.push({
+            //    lat: pos.coords.latitude,
+             //   long: pos.coords.longitude
+           // }, );
+       // } 
 
-        navigator.geolocation.getCurrentPosition(success);
+        //navigator.geolocation.getCurrentPosition(success);
 
         var map;
 
@@ -402,7 +402,7 @@
                             name = this.title;
                             banking_marker = this.banking_marker;
                             infowindow.setContent("");
-                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null,
+                            $.getJSON("/dynamicData/" + this.station_number, null,
                                 function (data) {
                                     content = "";
                                     available_bikes = data[0].available_bikes;
@@ -533,7 +533,7 @@
                             name = this.title;
                             banking_marker = this.banking_marker;
                             infowindow.setContent("");
-                            $.getJSON("http://127.0.0.1:5000/dynamicData/" + this.station_number, null,
+                            $.getJSON("/dynamicData/" + this.station_number, null,
                                 function (data) {
                                     content = "";
                                     available_bikes = data[0].available_bikes;
@@ -617,7 +617,7 @@
     <!-------------------------- Dropdown Menu ------------------------------------------->
     <script>
         var xmlhttp1 = new XMLHttpRequest();
-        var url1 = "http://127.0.0.1:5000/stations";
+        var url1 = "/stations";
         var dropdownName = [];
         var dropdownValue = [];
         var totalStands = [];
@@ -656,7 +656,7 @@
             var totalstands = stationSelect.options[stationSelect.selectedIndex].id;
 
             console.log(station, day, hour, totalstands)
-            $.getJSON("http://127.0.0.1:5000/predict/" + station + "/" + day + "/" + hour + "/" + totalstands,
+            $.getJSON("/predict/" + station + "/" + day + "/" + hour + "/" + totalstands,
                 null,
                 function (prediction) {
                     console.log(prediction);
@@ -691,12 +691,12 @@
             document.getElementById('chart_div').innerHTML = loader;
             document.getElementById('hourly_div').innerHTML = loader;
 
-            $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
+            $.getJSON("/dynamicData/" + value, null, function (info) {
                 available_bikes = info[0].available_bikes;
                 available_stands = info[0].available_bike_stands;
                 status = info[0].status;
 
-                $.getJSON("http://127.0.0.1:5000/dynamicData/" + value, null, function (info) {
+                $.getJSON("/dynamicData/" + value, null, function (info) {
 
                     bikeInfo.innerHTML +=
                         "<p><button onclick='dropDownRoute()' >Directions</button></p>";
@@ -806,7 +806,7 @@
 
         function coordinates() {
             var xmlhttp1 = new XMLHttpRequest();
-            var url = "http://127.0.0.1:5000/stations";
+            var url = "/stations";
             xmlhttp1.onreadystatechange = function () {
                 if (xmlhttp1.readyState == 4 && xmlhttp1.status == 200) {
                     coorddata = JSON.parse(xmlhttp1.responseText);

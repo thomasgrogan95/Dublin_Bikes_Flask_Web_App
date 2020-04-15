@@ -50,9 +50,7 @@ def get_occupancy():
     #engine = connectDB()
     occupancyData = []
     conn = engine.connect()
-    sql = """SELECT distinct number, available_bikes, available_bike_stands, total_stands, name, latitude, longitude, banking, last_update FROM (
-            SELECT distinct DynamicData.number, DynamicData.available_bikes, DynamicData.available_bike_stands, DynamicData.last_update, StaticData.name, StaticData.banking, StaticData.latitude, StaticData.longitude, StaticData.total_stands FROM DynamicData.DynamicData, StaticData where DynamicData.number = StaticData.number order by DynamicData.last_update DESC  
-                ) as hello group by number;"""
+    sql = "SELECT DynamicData.number, DynamicData.available_bikes, DynamicData.available_bike_stands, DynamicData.last_update, StaticData.name, StaticData.banking, StaticData.latitude, StaticData.longitude, StaticData.total_stands FROM DynamicData.DynamicData, StaticData where DynamicData.number = StaticData.number order by DynamicData.created_at DESC limit 109 ;"
     data = conn.execute(sql)
     for row in data:
         occupancyData.append(dict(row))
@@ -152,11 +150,11 @@ def prediction(station, day, hour, totalStands):
 
     setValues(X, inputs)
 
-    model = pickle.load(open('app/static/models/model.pkl','rb'))
+    model = pickle.load(open('static/models/model.pkl','rb'))
     prediction = model.predict(X)
 
     return jsonify(availability=int(round(prediction[0])))
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+#if __name__ == "__main__":
+    #app.run()
