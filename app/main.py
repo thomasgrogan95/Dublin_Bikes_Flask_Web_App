@@ -37,6 +37,7 @@ def home():
 
 @app.route("/stations")
 def get_stations():
+    '''Returns the static data for each station'''
     stations = []
     conn=engine.connect()
     rows = conn.execute("SELECT * from StaticData order by number;")
@@ -48,6 +49,7 @@ def get_stations():
 
 @app.route("/StaticData/<station_id>")
 def get_stations2(station_id):
+    '''Returns the static data for station with specific id'''
     stations = []
     conn=engine.connect()
     sql = "SELECT * FROM StaticData where number = " + station_id
@@ -60,6 +62,7 @@ def get_stations2(station_id):
 
 @app.route("/occupancy")
 def get_occupancy():
+    '''Returns the dynamic data needed to create the map markers'''
     occupancyData = []
     conn = engine.connect()
     sql = "SELECT DynamicData.number, DynamicData.available_bikes, DynamicData.available_bike_stands, DynamicData.last_update, StaticData.name, StaticData.banking, StaticData.latitude, StaticData.longitude, StaticData.total_stands FROM DynamicData.DynamicData, StaticData where DynamicData.number = StaticData.number order by DynamicData.created_at DESC limit 109 ;"
@@ -72,6 +75,7 @@ def get_occupancy():
 
 @app.route("/weather")
 def getWeather():
+    '''Returns the most recent weather data from the database'''
     weather = []
     conn = engine.connect()
     rows = conn.execute("SELECT * FROM DynamicData.weatherData order by DATE desc, time desc limit 1 ;")
@@ -83,6 +87,7 @@ def getWeather():
 
 @app.route("/dynamicData/<station_id>")
 def get_dynamic_data(station_id):
+    '''Returns most recent data for a specific station'''
     stationData = []
     conn=engine.connect()
     sql = "SELECT * FROM DynamicData where number = " + station_id + " order by last_update DESC limit 1;"
@@ -95,6 +100,7 @@ def get_dynamic_data(station_id):
 
 @app.route("/dailyData/<station>")
 def get_day_data(station):
+    '''Returns the average bike availability for a given station for each day of the week'''
     daily = []
     conn = engine.connect()
 
@@ -109,6 +115,7 @@ def get_day_data(station):
 
 @app.route("/hourlyData/<station>/<day>")
 def get_hourly_data(station, day):
+    '''Returns the average bike availability for a given station for each hour of the current day of the week'''
     hourly = []
     conn = engine.connect()
 
@@ -123,6 +130,8 @@ def get_hourly_data(station, day):
 
 @app.route("/predict/<station>/<day>/<hour>/<totalStands>")
 def prediction(station, day, hour, totalStands):
+    '''Returns the predicted number of available bikes for a given station on a specific day and time.
+    The total number of bike stands is also used as input into the model'''
 
     def setValues(df, dict):
         df['number'][0] = dict['number']
@@ -158,7 +167,7 @@ def prediction(station, day, hour, totalStands):
     X = initDF()
 
     setValues(X, inputs)
-
+    # Load the serialised model and pass data frame for prediction.
     model = joblib.load('static/models/joblib_model.pkl')
     prediction = model.predict(X)
 

@@ -6,7 +6,6 @@
     <title>
         {{ Title }}
     </title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"> -->
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Orbitron" />
     <script src="/static/js/script.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -38,6 +37,7 @@
             </h1>
         </div>
         <div id="layers">
+            <!-- Toggle buttons for dark mode and bicycle layer -->
             <h1>
                 <input type="checkbox" id="switch" !checked data-toggle="toggle" data-on='Dark Mode'
                     data-off="Dark Mode" data-onstyle="success" data-offstyle="danger">
@@ -49,7 +49,7 @@
         </div>
 
     </div>
-
+    <!-- Div to hold the map -->
     <div id="map">
 
     </div>
@@ -120,7 +120,7 @@
         </div>
     </div>
 
-
+    <!-- Div for daily and hourly data charts -->
     <div id="dataAnalytics">
         <div id="chart_div" class="chart"></div>
         <div id="hourly_div" class="chart"></div>
@@ -322,6 +322,7 @@
         ]
         currentLocation = [{lat: 53.309089, long: -6.223930}];
 
+        // This function would have been used if we had been able to get SSL certs working on EC2 instance:
         //function success(pos) {
           //  currentLocation.push({
             //    lat: pos.coords.latitude,
@@ -358,7 +359,7 @@
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     data = JSON.parse(xmlhttp.response);
-                    // console.log(data)
+                    
                     for (var j = 0; j < data.length; j++) {
                         latitudeArray.push(data[j].latitude)
                         longitudeArray.push(data[j].longitude)
@@ -391,7 +392,7 @@
                             icon: 'http://maps.google.com/mapfiles/ms/micons/blue.png'
 
                         })
-
+                        // Change colour of markers depending on percentage of available bikes.
                         if (marker.available >= 0.25) {
                             marker.setIcon('http://maps.google.com/mapfiles/ms/micons/green-dot.png');
                         } else if (marker.available > 0) {
@@ -406,6 +407,7 @@
                         };
                         var infowindow = new google.maps.InfoWindow({});
                         marker.addListener('click', function () {
+                            // Create an InfoWindow for the marker that is clicked, with the station's data.
                             name = this.title;
                             banking_marker = this.banking_marker;
                             infowindow.setContent("");
@@ -442,6 +444,7 @@
                                 })
 
                             infowindow.open(map, this);
+                            // Call the two functions to draw daily and hourly charts for specific station.
                             dailyGraph(this.station_number, name);
                             hourlyGraph(this.station_number, name);
                             var loader =
@@ -489,7 +492,7 @@
             xmlhttp.onreadystatechange = function () {
                 if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                     data = JSON.parse(xmlhttp.response);
-                    // console.log(data)
+        
                     for (var j = 0; j < data.length; j++) {
                         latitudeArray.push(data[j].latitude)
                         longitudeArray.push(data[j].longitude)
@@ -522,7 +525,7 @@
                             icon: 'http://maps.google.com/mapfiles/ms/micons/blue.png'
 
                         })
-
+                        // Change colour of markers depending on percentage of available bikes.
                         if (marker.available >= 0.25) {
                             marker.setIcon('http://maps.google.com/mapfiles/ms/micons/green-dot.png');
                         } else if (marker.available > 0) {
@@ -537,6 +540,7 @@
                         };
                         var infowindow = new google.maps.InfoWindow({});
                         marker.addListener('click', function () {
+                            // Create an InfoWindow for the marker that is clicked, with the station's data.
                             name = this.title;
                             banking_marker = this.banking_marker;
                             infowindow.setContent("");
@@ -573,6 +577,7 @@
                                 })
 
                             infowindow.open(map, this);
+                            // Call the two functions to draw daily and hourly charts for specific station.
                             dailyGraph(this.station_number, name);
                             hourlyGraph(this.station_number, name);
                             var loader =
@@ -593,9 +598,7 @@
 
 
 
-        function calcRoute() {
-            // function calcRoute(currentLat, currentLong) {  
-            console.log(currentLocation);
+        function calcRoute() {  
 
             var request = {
                 origin: {
@@ -604,9 +607,7 @@
 
                 },
 
-                destination: {
-                    // lat: currentLocation[25],
-                    // lng: currentLocation[26]                    
+                destination: {                   
 
                     lng: currentLocation.pop(),
                     lat: currentLocation.pop()
@@ -653,7 +654,7 @@
 
     <script>
         $(".predictButton").click(function () {
-
+            // Get a prediction for abike availability based on station number, day, hour, total number of stands.
             var daySelect = document.getElementById("day");
             var day = daySelect.value;
             var hourSelect = document.getElementById("time");
@@ -662,11 +663,10 @@
             var station = stationSelect.value;
             var totalstands = stationSelect.options[stationSelect.selectedIndex].id;
 
-            console.log(station, day, hour, totalstands)
             $.getJSON("/predict/" + station + "/" + day + "/" + hour + "/" + totalstands,
                 null,
                 function (prediction) {
-                    console.log(prediction);
+                    // Display the predicted number of bikes in the dropStationInfo div.
                     var predictionInfo = document.getElementById("dropStationInfo");
                     var bikes = "bikes";
                     if (prediction.availability == 1) {
@@ -688,13 +688,14 @@
         function myFunction() {
             var predictionInfo = document.getElementById("dropStationInfo");
             predictionInfo.innerHTML = "";
-            //var bikeInfo = document.getElementById("nearestInfo");
             bikeInfo = "";
-            //bikeInfo.innerHTML = "";
             value = sel.value;
             selectStation = $("#stations option:selected").text();
+            // Call functions to draw daily and hourly charts for selected station.
             dailyGraph(value, selectStation);
             hourlyGraph(value, selectStation);
+
+            // Display gifs while each chart is loading.
             var loader = "<p><img src='/static/images/Infinity-1s-200px.gif' class='loader'></p>"
             document.getElementById('chart_div').innerHTML = loader;
             document.getElementById('hourly_div').innerHTML = loader;
@@ -727,9 +728,7 @@
         $.getJSON("/weather", null, function (weather) {
 
             function showTime() {
-                var today = new Date();
-                // var time = today.getHours() + ":" + today.getMinutes();  
-
+                var today = new Date();  
                 var h = today.getHours();
                 var m = today.getMinutes();
                 var s = today.getSeconds();
@@ -739,7 +738,6 @@
                 s = (s < 10) ? "0" + s : s;
 
                 var time = h + ":" + m + ":" + s;
-                // weatherDisplay += time;
                 document.getElementById('timeDiv').innerText = time;
 
                 setTimeout(showTime, 1000);
@@ -747,9 +745,6 @@
 
             }
             showTime();
-
-
-            // weatherDisplay += "<p>" + weather[0].date + ' ' + today.getHours() + "</p>"
 
 
             var iconDict = [{
@@ -783,7 +778,6 @@
             ];
 
             for (var c = 0; c < iconDict.length; c++) {
-                // console.log(iconDict[c].icon);
                 if (iconDict[c].icon == weather[0].icon) {
                     statusDisplay += "<p id=stat>" + iconDict[c].image + "</p>";
                 }
@@ -795,11 +789,7 @@
 
             weatherDisplay += "<p>" + '' + "</p>"
             weatherDisplay += "<p> Status: " + weather[0].status + "</p>"
-            // weatherDisplay += "<p> Icon: " + weather[0].icon + "</p>"
             weatherDisplay += "<p> Chance of rain: " + (weather[0].rainProb * 100) + "%</p>"
-            // weatherDisplay += "<p>Rain Intensity: " + weather[0].rainIntensity + "</p>"
-            // weatherDisplay += "<p>Rain Type: " + weather[0].rainType + "</p>"
-            // weatherDisplay += "<p>Temperature: " + weather[0].temp + "</p>"
             weatherDisplay += "<p>Wind Speed: " + weather[0].windSpeed + " km/h</p>"
             document.getElementById("weatherInfo").innerHTML = weatherDisplay;
 
