@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <html>
 
 <head>
@@ -31,17 +32,21 @@
 
 
 <body>
-    <div id="header">
-        <h1>Dublin Bikes
-            <div id="dor">
+    <div id="topdiv">
+        <div id="header">
+            <h1>Dublin Bikes
+            </h1>
+        </div>
+        <div id="layers">
+            <h1>
                 <input type="checkbox" id="switch" !checked data-toggle="toggle" data-on='Dark Mode'
                     data-off="Dark Mode" data-onstyle="success" data-offstyle="danger">
 
                 <input type="checkbox" id="switch1" !checked data-toggle="toggle" data-on='Bicycle Layer'
                     data-off="Bicycle Layer" data-onstyle="success" data-offstyle="danger">
-            </div>
-        </h1>
 
+            </h1>
+        </div>
 
     </div>
 
@@ -55,48 +60,50 @@
         <!-- Div for dropdown menu -->
         <div id="drop">
             <select id="stations" name="Select Station"></select>
-            <select id="day">
-                <option value="0">Monday</option>
-                <option value="1">Tuesday</option>
-                <option value="2">Wednesday</option>
-                <option value="3">Thursday</option>
-                <option value="4">Friday</option>
-                <option value="5">Saturday</option>
-                <option value="6">Sunday</option>
-            </select>
-            <select id="time">
-                <option value="5">05:00</option>
-                <option value="6">06:00</option>
-                <option value="7">07:00</option>
-                <option value="8">08:00</option>
-                <option value="9">09:00</option>
-                <option value="10">10:00</option>
-                <option value="11">11:00</option>
-                <option value="12">12:00</option>
-                <option value="13">13:00</option>
-                <option value="14">14:00</option>
-                <option value="15">15:00</option>
-                <option value="16">16:00</option>
-                <option value="17">17:00</option>
-                <option value="18">18:00</option>
-                <option value="19">19:00</option>
-                <option value="20">20:00</option>
-                <option value="21">21:00</option>
-                <option value="22">22:00</option>
-                <option value="23">23:00</option>
+            <div id="predict" style="padding-bottom: 10px">
+                <select id="day">
+                    <option selected disabled value="">Day</option>
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                </select>
+                <select id="time">
+                    <option selected disabled value="">Time</option>
+                    <option value="5">05:00</option>
+                    <option value="6">06:00</option>
+                    <option value="7">07:00</option>
+                    <option value="8">08:00</option>
+                    <option value="9">09:00</option>
+                    <option value="10">10:00</option>
+                    <option value="11">11:00</option>
+                    <option value="12">12:00</option>
+                    <option value="13">13:00</option>
+                    <option value="14">14:00</option>
+                    <option value="15">15:00</option>
+                    <option value="16">16:00</option>
+                    <option value="17">17:00</option>
+                    <option value="18">18:00</option>
+                    <option value="19">19:00</option>
+                    <option value="20">20:00</option>
+                    <option value="21">21:00</option>
+                    <option value="22">22:00</option>
+                    <option value="23">23:00</option>
 
-            </select>
-            <button class="predictButton" type="submit">Predict Availability</button>
+                </select>
+                <button class="predictButton" type="submit">Predict</button>
+            </div>
+            <div id="dropStationInfo">
+            </div>
+
+            <div id="nearestInfo">
+
+            </div>
         </div>
 
-
-        <div id="dropStationInfo">
-        </div>
-
-
-        <div id="nearestInfo">
-            <button onclick="calcRoute()"></button>
-        </div>
 
 
         <div id="timeDiv" onload="showTime()">
@@ -681,8 +688,9 @@
         function myFunction() {
             var predictionInfo = document.getElementById("dropStationInfo");
             predictionInfo.innerHTML = "";
-            var bikeInfo = document.getElementById("nearestInfo");
-            bikeInfo.innerHTML = "";
+            //var bikeInfo = document.getElementById("nearestInfo");
+            bikeInfo = "";
+            //bikeInfo.innerHTML = "";
             value = sel.value;
             selectStation = $("#stations option:selected").text();
             dailyGraph(value, selectStation);
@@ -695,12 +703,16 @@
                 available_bikes = info[0].available_bikes;
                 available_stands = info[0].available_bike_stands;
                 status = info[0].status;
+                bikeInfo += "<p><button onclick='dropDownRoute()' >Directions</button></p>"
+                bikeInfo += "<div id=col1><span class=avail_bikes style=margin:0; >" + available_bikes +
+                    "</span><p>Available<br>Bikes</p></div>";
+                bikeInfo += "<div id=col2><span class=avail_stands style=margin:0; >" + available_stands +
+                    "</span>";
 
-                $.getJSON("/dynamicData/" + value, null, function (info) {
+                bikeInfo += "<p>Free<br>Stands</p></div>";
 
-                    bikeInfo.innerHTML +=
-                        "<p><button onclick='dropDownRoute()' >Directions</button></p>";
-                })
+                document.getElementById('nearestInfo').innerHTML = bikeInfo;
+
             })
 
         }
@@ -784,11 +796,11 @@
             weatherDisplay += "<p>" + '' + "</p>"
             weatherDisplay += "<p> Status: " + weather[0].status + "</p>"
             // weatherDisplay += "<p> Icon: " + weather[0].icon + "</p>"
-            weatherDisplay += "<p> Chance of rain: " + weather[0].rainProb + "%</p>"
+            weatherDisplay += "<p> Chance of rain: " + (weather[0].rainProb * 100) + "%</p>"
             // weatherDisplay += "<p>Rain Intensity: " + weather[0].rainIntensity + "</p>"
             // weatherDisplay += "<p>Rain Type: " + weather[0].rainType + "</p>"
             // weatherDisplay += "<p>Temperature: " + weather[0].temp + "</p>"
-            weatherDisplay += "<p>Wind Speed: " + weather[0].windSpeed + "</p>"
+            weatherDisplay += "<p>Wind Speed: " + weather[0].windSpeed + " km/h</p>"
             document.getElementById("weatherInfo").innerHTML = weatherDisplay;
 
         })

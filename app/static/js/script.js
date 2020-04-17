@@ -37,7 +37,7 @@ function dailyGraph(station, name){
             },
           
           legend: 'none',
-          backgroundColor: "rgb(85, 96, 112)",
+          backgroundColor: "rgb(34, 40, 49)",
           colors: ['red'],
           titleTextStyle: {color: 'white'},
           lineWidth: 3,
@@ -107,7 +107,7 @@ function hourlyGraph(station, name){
           },
         
         legend: 'none',
-        backgroundColor: "rgb(85, 96, 112)",
+        backgroundColor: "rgb(34, 40, 49)",
         colors: ['red'],
         titleTextStyle: {color: 'white'},
         lineWidth: 3,
@@ -127,15 +127,10 @@ function hourlyGraph(station, name){
 
 
 function dropDownRoute(){  
-  $.getJSON("/stations" , null, function(coordinates){
-      for(var t = 0; t < coordinates.length; t++){
-        if ( coordinates[t].number == value){
-          console.log(coordinates[t].number);
-          selectedLat = coordinates[t].latitude;
-          selectedLong = coordinates[t].longitude  
-        } 
-      }   
-  })
+  $.getJSON("/StaticData" , null, function(dor){
+      selectedLat = dor[0].latitude;
+      selectedLong = dor[0].longitude
+  
       var request = {
         origin: {
           lat: currentLocation[0].lat,
@@ -153,5 +148,5 @@ function dropDownRoute(){
             directionsRenderer.setDirections(result);
         }
     });
-
+  })
 }
