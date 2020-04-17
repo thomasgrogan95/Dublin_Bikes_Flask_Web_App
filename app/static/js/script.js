@@ -1,8 +1,7 @@
 function dailyGraph(station, name){
+  // Function to draw the chart with daily averages for a specific station. Uses a Google chart.
     var selectedStation = station;
     var stationName = name;
-    var d = new Date();
-    var day = d.getDay();
 
     $.getJSON("/dailyData/" + selectedStation, null, function(daily){
 
@@ -56,6 +55,7 @@ function dailyGraph(station, name){
 }
 
 function hourlyGraph(station, name){
+  // Function to draw the chart with hourly averages for a specific station on the current day. Uses a Google chart.
   var selectedStation = station;
   var stationName = name;
   var d = new Date();
@@ -126,7 +126,8 @@ function hourlyGraph(station, name){
 } 
 
 
-function dropDownRoute(){  
+function dropDownRoute(){ 
+  // Function to get walking route from current location (UCD) to station selected in dropdown menu. 
   $.getJSON("/StaticData" , null, function(dor){
       selectedLat = dor[0].latitude;
       selectedLong = dor[0].longitude
