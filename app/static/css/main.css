@@ -3,7 +3,7 @@ html {
 }
 
 body {
-    background-color: white;
+    background-color: rgb(34, 40, 49);
     margin: 0px;
     padding: 0px;
 }
@@ -15,11 +15,12 @@ html {
 
 #header {
     color: White;
-    text-align: center;
     background-color: rgb(34, 40, 49);
     margin: 0;
     padding: 10px;
-    border-bottom: 2px solid white;
+    display: inline-block;
+    text-align: right;
+    width: 57%;
 }
 
 h1 {
@@ -37,25 +38,46 @@ h1 {
     height: 550px;
     width: 75%;
     float: left;
+    border: 2px solid white;
+    border-right: none;
+    border-top: none;
+    box-sizing: border-box;
+
 }
 
+@media screen and (max-width: 800px) {
+    #map {
+        width: 100%;
+        /* The width is 100%, when the viewport is 800px or smaller */
+        height: 600px;
+    }
+    #information {
+        display: none;
+    }
+    #layers {
+        display: none;
+        width: 0;
+    }
+
+    h1 {
+        width: 375px;
+        text-align: center;
+    }
+}
 
 #information {
     float: left;
     position: relative;
     width: 25%;
     height: 550px;
-    /* background-color: rgba(135, 197, 222); */
     background-color: rgb(34, 40, 49);
-    border-left: 2px solid white;
-    border-right: 2px solid white;
+    border: 2px solid white;
+    border-top: none;
     box-sizing: border-box;
 }
 
 #weatherInfo {
     padding-left: 10px;
-    /* padding-top: 20px;
-    padding-bottom: 20px; */
 }
 
 #dropStationInfo {
@@ -68,14 +90,15 @@ h1 {
 .avail_bikes,
 .avail_stands {
     background: #cccccc;
-    border-radius: 0.8em;
+    border-radius: 100%;
     display: inline-block;
     font-weight: bold;
     line-height: 1.6em;
-    /* margin-right: 10px; */
+    margin-right: 10px;
     text-align: center;
     width: 1.6em;
-    font-size: large;
+    font-size: 25px;
+
 }
 
 .name {
@@ -85,24 +108,32 @@ h1 {
     margin: 0;
     margin-top: 10px;
     font-weight: bold;
+    color: black;
+}
+
+.modaltext {
+    font-weight: 600;
+    color: black;
+    font-size: small;
+    margin-top: 15px;
 }
 
 .avail_bikes {
     background-color: red;
     margin-left: 4%;
     text-align: center;
-    font-size: 20px;
+
 }
 
 .avail_stands {
-    background-color: aquamarine;
+    background-color: rgb(33, 202, 42);
     margin-right: 4%;
     text-align: center;
+
 }
 
 #col1,
 #col2 {
-    /* display: inline-block; */
     text-align: center;
     width: 40%;
     margin-top: 20px;
@@ -124,25 +155,21 @@ h1 {
 img {
     width: 25px;
     height: 22px;
-    /* float: right; */
 }
 
 #imagediv {
     float: right;
 }
-/* 
-.name {
-    color: black;
-} */
+
 
 #chart_div {
-    width: 50vw;
+    width: 49.8vw;
     height: 370px;
     float: left;
 }
 
 #hourly_div {
-    width: 50vw; 
+    width: 49.8vw;
     height: 370px;
     float: right;
 }
@@ -151,18 +178,11 @@ img {
     display: inline-block;
     width: 100vw;
     background-color: rgb(85, 96, 112);
-    border-top: 2px solid white;
+    background-color: rgb(34, 40, 49);
+    border: 2px solid white;
+    border-top: none;
 }
 
-/* .gm-style-iw.gm-style-iw-c {
-    margin: 0;
-    padding: 0;
-}
-
-#modal {
-    width: 282px;
-    height: 100px;
-} */
 
 #iconIMG {
     height: 75px;
@@ -172,10 +192,12 @@ img {
 #timeDiv {
     color: white;
     width: 100%;
-    /* font-family: Orbitron; */
     margin-bottom: 5%;
     font-size: 20px;
     padding-left: 10px;
+    text-align: center;
+    border-top: 2px solid white;
+    padding-top: 20px;
 }
 
 #stat {
@@ -197,15 +219,10 @@ p {
 
 button {
     font-size: 16px;
-    background-color: rgb(85, 96, 112);
+    background-color: rgb(115, 143, 184);
     border: 1px black solid;
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-
-#nearestInfo {
-    padding-bottom: 20px;
-    padding-left: 10px;
+    color: white;
+    border-radius: 8px;
 }
 
 .loader {
@@ -219,10 +236,39 @@ button {
 #statusdiv {
     border-bottom: 2px solid white;
     padding-left: 10px;
-    padding-bottom: 20px ;
+    padding-bottom: 20px;
+    text-align: center;
 }
 
-#timeDiv {
-    border-top: 2px solid white;
-    padding-top: 20px;
-}  
+
+
+#layers {
+    padding: 10px;
+    float: right;
+    padding-right: 20px;
+    width: 40%;
+    text-align: right;
+}
+
+
+#predict {
+    margin-top: 10px;
+}
+
+#stations {
+    width: 70%;
+}
+
+#drop {
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
+#topdiv {
+    border: 2px solid white;
+    box-sizing: border-box;
+}
+
+#dropStationInfo {
+    color: white;
+}
