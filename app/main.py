@@ -8,9 +8,11 @@ import simplejson
 import json
 import pickle
 import pandas as pd
+from sklearn.externals import joblib
 
 app = Flask(__name__)
 
+model = None
 
 def connectDB():
     ''' Create a connection to our AWS database '''
@@ -157,10 +159,13 @@ def prediction(station, day, hour, totalStands):
     X = initDF()
 
     setValues(X, inputs)
-
-    model = pickle.load(open('app/static/models/model.pkl','rb'))
-    prediction = model.predict(X)
-
+    global model
+    if  model != None:
+        prediction = model.predict(X)
+    else:
+        loadModel = joblib.load('static/models/joblib_model.pkl')
+        model = loadModel
+        prediction = model.predict(X)
     return jsonify(availability=int(round(prediction[0])))
 
 

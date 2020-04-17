@@ -1,18 +1,15 @@
 html {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
-
 body {
     background-color: rgb(34, 40, 49);
     margin: 0px;
     padding: 0px;
 }
-
 html {
     margin: 0px;
     padding: 0px;
 }
-
 #header {
     color: White;
     background-color: rgb(34, 40, 49);
@@ -22,18 +19,15 @@ html {
     text-align: right;
     width: 57%;
 }
-
 h1 {
     margin: 0 auto;
 }
-
 .map,
 .chart,
 .info {
     height: 100%;
     width: 100%;
 }
-
 #map {
     height: 550px;
     width: 75%;
@@ -42,9 +36,7 @@ h1 {
     border-right: none;
     border-top: none;
     box-sizing: border-box;
-
 }
-
 @media screen and (max-width: 800px) {
     #map {
         width: 100%;
@@ -58,13 +50,11 @@ h1 {
         display: none;
         width: 0;
     }
-
     h1 {
         width: 375px;
         text-align: center;
     }
 }
-
 #information {
     float: left;
     position: relative;
@@ -75,18 +65,14 @@ h1 {
     border-top: none;
     box-sizing: border-box;
 }
-
 #weatherInfo {
     padding-left: 10px;
 }
-
 #dropStationInfo {
     background-color: rgb(34, 40, 49);
     padding-top: 10px;
     padding-left: 10px;
 }
-
-
 .avail_bikes,
 .avail_stands {
     background: #cccccc;
@@ -98,9 +84,7 @@ h1 {
     text-align: center;
     width: 1.6em;
     font-size: 25px;
-
 }
-
 .name {
     display: block;
     text-align: center;
@@ -110,70 +94,55 @@ h1 {
     font-weight: bold;
     color: black;
 }
-
 .modaltext {
     font-weight: 600;
     color: black;
     font-size: small;
     margin-top: 15px;
 }
-
 .avail_bikes {
     background-color: red;
     margin-left: 4%;
     text-align: center;
-
 }
-
 .avail_stands {
     background-color: rgb(33, 202, 42);
     margin-right: 4%;
     text-align: center;
-
 }
-
 #col1,
 #col2 {
     text-align: center;
     width: 40%;
     margin-top: 20px;
 }
-
 #col1 {
     margin-right: 10%;
     float: left;
 }
-
 #col2 {
     float: right;
 }
-
 .gm-style-iw {
     width: 300px;
 }
-
 img {
     width: 25px;
     height: 22px;
 }
-
 #imagediv {
     float: right;
 }
-
-
 #chart_div {
-    width: 49.5vw;
+    width: 49.8vw;
     height: 370px;
     float: left;
 }
-
 #hourly_div {
-    width: 49.5vw;
+    width: 49.8vw;
     height: 370px;
     float: right;
 }
-
 #dataAnalytics {
     display: inline-block;
     width: 100vw;
@@ -182,13 +151,10 @@ img {
     border: 2px solid white;
     border-top: none;
 }
-
-
 #iconIMG {
     height: 75px;
     width: 75px;
 }
-
 #timeDiv {
     color: white;
     width: 100%;
@@ -199,7 +165,6 @@ img {
     border-top: 2px solid white;
     padding-top: 20px;
 }
-
 #stat {
     display: inline;
     vertical-align: middle;
@@ -207,16 +172,13 @@ img {
     font-size: 35px;
     font-weight: 10;
 }
-
 #stationsdropdown {
     background-color: white;
 }
-
 p {
     color: white;
     font-size: 20px;
 }
-
 button {
     font-size: 16px;
     background-color: rgb(115, 143, 184);
@@ -224,24 +186,18 @@ button {
     color: white;
     border-radius: 8px;
 }
-
 .loader {
     width: 300px;
     height: 180px;
     margin-left: 25%;
     margin-top: 15%;
 }
-
-
 #statusdiv {
     border-bottom: 2px solid white;
     padding-left: 10px;
     padding-bottom: 20px;
     text-align: center;
 }
-
-
-
 #layers {
     padding: 10px;
     float: right;
@@ -249,26 +205,20 @@ button {
     width: 40%;
     text-align: right;
 }
-
-
 #predict {
     margin-top: 10px;
 }
-
 #stations {
     width: 70%;
 }
-
 #drop {
     padding-left: 10px;
     padding-top: 10px;
 }
-
 #topdiv {
     border: 2px solid white;
     box-sizing: border-box;
 }
-
 #dropStationInfo {
     color: white;
 }
