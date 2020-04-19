@@ -128,7 +128,7 @@ function hourlyGraph(station, name){
 
 function dropDownRoute(){ 
   // Function to get walking route from current location (UCD) to station selected in dropdown menu. 
-  $.getJSON("/StaticData" , null, function(dor){
+  $.getJSON("/StaticData/" + value , null, function(dor){
       selectedLat = dor[0].latitude;
       selectedLong = dor[0].longitude
   
